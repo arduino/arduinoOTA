@@ -26,6 +26,7 @@ var (
 	uploadEndpoint = flag.String("upload", "", "Upload endpoint")
 	resetEndpoint  = flag.String("reset", "", "Upload endpoint")
 	syncEndpoint   = flag.String("sync", "", "Upload endpoint")
+	binMode        = flag.Bool("b", false, "Upload binary mode")
 	verbose        = flag.Bool("v", true, "Verbose flag")
 	quiet          = flag.Bool("q", false, "Quiet flag")
 	useSsl         = flag.String("ssl", "", "SSL flag")
@@ -120,11 +121,18 @@ func main() {
 		}
 		defer f.Close()
 
-		str := StreamToString(f)
-		re := regexp.MustCompile(`\r?\n`)
-		str = re.ReplaceAllString(str, "")
+		var sketchData *bytes.Buffer
 
-		req, err := http.NewRequest("POST", httpheader+*networkAddress+":"+*networkPort+*uploadEndpoint, bytes.NewBufferString(str))
+		if *binMode {
+			sketchData = StreamToBytes(f)
+		} else {
+			str := StreamToString(f)
+			re := regexp.MustCompile(`\r?\n`)
+			str = re.ReplaceAllString(str, "")
+			sketchData = bytes.NewBufferString(str)
+		}
+
+		req, err := http.NewRequest("POST", httpheader+*networkAddress+":"+*networkPort+*uploadEndpoint, sketchData)
 		if err != nil {
 			if *verbose {
 				fmt.Println("Error sending sketch file")
@@ -173,8 +181,12 @@ func main() {
 	}
 }
 
-func StreamToString(stream io.Reader) string {
+func StreamToBytes(stream io.Reader) *bytes.Buffer {
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(stream)
-	return buf.String()
+	return buf
+}
+
+func StreamToString(stream io.Reader) string {
+	return StreamToBytes(stream).String()
 }
