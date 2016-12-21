@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 GIT_REV=`git log --pretty=format:'%h' -n 1`
 BUILD_DATE=`date +%Y-%m-%d:%H:%M:%S`
-COMPILEINFO="$GIT_REV+$BUILD_DATE"
+COMPILEINFO=`echo +$GIT_REV+$BUILD_DATE | tr -d '"'`
 
 VERSION=`cat main.go| grep "const AppVersion" |cut -f4 -d " " | tr -d '"'`
 
@@ -18,7 +18,7 @@ mkdir distrib
 for folder in "${target_folders[@]}"
 do
    mkdir -p distrib/$folder/bin/
-   go build -o distrib/$folder/bin/arduinoOTA -ldflags "-X main.compileInfo=\"$COMPILEINFO\"" main.go
+   go build -o distrib/$folder/bin/arduinoOTA -ldflags "-X main.compileInfo=$COMPILEINFO" main.go
 
 done
 
