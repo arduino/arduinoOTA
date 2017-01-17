@@ -31,7 +31,7 @@ cd distrib
 for folder in "${target_folders[@]}"
 do
    cd $folder
-   if [[ $folder == "windows" ]]; then
+   if [[ $folder == "windows*" ]]; then
 	zip -r ../arduinoOTA-$VERSION-windows.zip bin/
    else
 	tar cjf ../arduinoOTA-$VERSION-$folder.tar.bz2 bin/
