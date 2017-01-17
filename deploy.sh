@@ -11,19 +11,20 @@ export GOPATH=$PWD
 
 rm -rf distrib/
 
-declare -a target_folders=("linux64" "linux32" "linuxarm" "osx" "windows")
+declare -a target_folders=("linux_amd64" "linux_386" "linux_arm" "darwin_amd64" "windows_386")
 
 mkdir distrib
 
 for folder in "${target_folders[@]}"
 do
+   IFS=_ read -a fields <<< $folder
    mkdir -p distrib/$folder/bin/
-   go build -o distrib/$folder/bin/arduinoOTA -ldflags "-X main.compileInfo=$COMPILEINFO" main.go
+   GOOS=${fields[0]} GOARCH=${fields[1]} go build -o distrib/$folder/bin/arduinoOTA -ldflags "-X main.compileInfo=$COMPILEINFO" main.go
 
 done
 
 #Fix windows binary extension
-mv distrib/windows/bin/arduinoOTA distrib/windows/bin/arduinoOTA.exe
+mv distrib/windows_386/bin/arduinoOTA distrib/windows_386/bin/arduinoOTA.exe
 
 cd distrib
 
