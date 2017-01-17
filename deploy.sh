@@ -30,13 +30,13 @@ cd distrib
 
 for folder in "${target_folders[@]}"
 do
-   cd $folder
+   mv $folder arduinoOTA
    if [[ $folder == "windows_386" ]]; then
-	zip -r ../arduinoOTA-$VERSION-$folder.zip bin/
+	zip -r arduinoOTA-$VERSION-$folder.zip arduinoOTA/
    else
-	tar cjf ../arduinoOTA-$VERSION-$folder.tar.bz2 bin/
+	tar cjf arduinoOTA-$VERSION-$folder.tar.bz2 arduinoOTA/
    fi
-   cd ..
+   rm -rf arduinoOTA
 done
 
 echo =======
