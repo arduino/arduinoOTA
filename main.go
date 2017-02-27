@@ -22,6 +22,8 @@ var (
 	version        = flag.Bool("version", false, "Prints program version")
 	networkAddress = flag.String("address", "localhost", "The address of the board")
 	networkPort    = flag.String("port", "80", "The board needs to be listening on this port")
+	username       = flag.String("username", "", "Username for authentication")
+	password       = flag.String("password", "", "Password for authentication")
 	sketchPath     = flag.String("sketch", "", "Sketch path")
 	uploadEndpoint = flag.String("upload", "", "Upload endpoint")
 	resetEndpoint  = flag.String("reset", "", "Upload endpoint")
@@ -140,6 +142,10 @@ func main() {
 			os.Exit(1)
 		}
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+		if len(*username) > 0 && len(*password) != 0 {
+			req.SetBasicAuth(*username, *password)
+		}
 
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
