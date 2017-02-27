@@ -141,7 +141,12 @@ func main() {
 			}
 			os.Exit(1)
 		}
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+		if *binMode {
+			req.Header.Set("Content-Type", "application/octet-stream")
+		} else {
+			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		}
 
 		if len(*username) > 0 && len(*password) != 0 {
 			req.SetBasicAuth(*username, *password)
