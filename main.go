@@ -48,6 +48,10 @@ func main() {
 		os.Exit(0)
 	}
 
+	var httpClient = &http.Client{
+		Timeout: time.Second * 10,
+	}
+
 	httpheader := "http://"
 
 	if *useSsl != "" {
@@ -70,7 +74,7 @@ func main() {
 			fmt.Println("Resetting the board")
 		}
 
-		resp, err := http.Post(httpheader+*networkAddress+":"+*networkPort+*syncEndpoint, "", nil)
+		resp, err := httpClient.Post(httpheader+*networkAddress+":"+*networkPort+*syncEndpoint, "", nil)
 		if err != nil || resp.StatusCode != syncRetCode {
 			if *verbose {
 				fmt.Println("Failed to reset the board, upload failed")
@@ -88,7 +92,7 @@ func main() {
 		timeout := 0
 
 		for timeout < 10 {
-			resp, err := http.Get(httpheader + *networkAddress + ":" + *networkPort + *syncEndpoint)
+			resp, err := httpClient.Get(httpheader + *networkAddress + ":" + *networkPort + *syncEndpoint)
 			if err != nil {
 				if *verbose {
 					fmt.Println("Failed to reset the board, upload failed")
@@ -152,7 +156,7 @@ func main() {
 			req.SetBasicAuth(*username, *password)
 		}
 
-		resp, err := http.DefaultClient.Do(req)
+		resp, err := httpClient.Do(req)
 		if err != nil {
 			if *verbose {
 				fmt.Println("Error flashing the sketch")
@@ -181,7 +185,7 @@ func main() {
 			fmt.Println("Resetting the board")
 		}
 
-		resp, err := http.Post(httpheader+*networkAddress+":"+*networkPort+*resetEndpoint, "", nil)
+		resp, err := httpClient.Post(httpheader+*networkAddress+":"+*networkPort+*resetEndpoint, "", nil)
 		if err != nil {
 			if *verbose {
 				fmt.Println("Failed to reset the board, please reset maually")
