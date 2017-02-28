@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/http/httptrace"
 	"os"
 	"regexp"
 	"strconv"
@@ -114,10 +115,6 @@ func main() {
 	}
 
 	if *uploadEndpoint != "" {
-		if *verbose {
-			fmt.Println("Uploading the sketch")
-		}
-
 		f, err := os.Open(*sketchPath)
 		if err != nil {
 			if *verbose {
@@ -154,6 +151,32 @@ func main() {
 
 		if len(*username) > 0 && len(*password) != 0 {
 			req.SetBasicAuth(*username, *password)
+		}
+
+		if *verbose {
+			trace := &httptrace.ClientTrace{
+				ConnectStart: func(network, addr string) {
+					fmt.Print("Connecting to board ... ")
+				},
+				ConnectDone: func(network, addr string, err error) {
+					if err != nil {
+						fmt.Println("failed!")
+					} else {
+						fmt.Println(" done")
+					}
+				},
+				WroteHeaders: func() {
+					fmt.Print("Uploading sketch ... ")
+				},
+				WroteRequest: func(wri httptrace.WroteRequestInfo) {
+					fmt.Println(" done")
+					fmt.Print("Flashing sketch ... ")
+				},
+				GotFirstResponseByte: func() {
+					fmt.Println(" done")
+				},
+			}
+			req = req.WithContext(httptrace.WithClientTrace(req.Context(), trace))
 		}
 
 		resp, err := httpClient.Do(req)
