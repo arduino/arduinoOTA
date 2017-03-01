@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-const AppVersion = "1.1.1"
+const AppVersion = "1.2.0"
 
 var compileInfo string
 
