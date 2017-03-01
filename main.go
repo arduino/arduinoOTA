@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/http/httptrace"
 	"os"
 	"regexp"
 	"strconv"
@@ -22,6 +23,8 @@ var (
 	version        = flag.Bool("version", false, "Prints program version")
 	networkAddress = flag.String("address", "localhost", "The address of the board")
 	networkPort    = flag.String("port", "80", "The board needs to be listening on this port")
+	username       = flag.String("username", "", "Username for authentication")
+	password       = flag.String("password", "", "Password for authentication")
 	sketchPath     = flag.String("sketch", "", "Sketch path")
 	uploadEndpoint = flag.String("upload", "", "Upload endpoint")
 	resetEndpoint  = flag.String("reset", "", "Upload endpoint")
@@ -46,6 +49,10 @@ func main() {
 		os.Exit(0)
 	}
 
+	var httpClient = &http.Client{
+		Timeout: time.Second * 10,
+	}
+
 	httpheader := "http://"
 
 	if *useSsl != "" {
@@ -68,7 +75,7 @@ func main() {
 			fmt.Println("Resetting the board")
 		}
 
-		resp, err := http.Post(httpheader+*networkAddress+":"+*networkPort+*syncEndpoint, "", nil)
+		resp, err := httpClient.Post(httpheader+*networkAddress+":"+*networkPort+*syncEndpoint, "", nil)
 		if err != nil || resp.StatusCode != syncRetCode {
 			if *verbose {
 				fmt.Println("Failed to reset the board, upload failed")
@@ -86,7 +93,7 @@ func main() {
 		timeout := 0
 
 		for timeout < 10 {
-			resp, err := http.Get(httpheader + *networkAddress + ":" + *networkPort + *syncEndpoint)
+			resp, err := httpClient.Get(httpheader + *networkAddress + ":" + *networkPort + *syncEndpoint)
 			if err != nil {
 				if *verbose {
 					fmt.Println("Failed to reset the board, upload failed")
@@ -108,10 +115,6 @@ func main() {
 	}
 
 	if *uploadEndpoint != "" {
-		if *verbose {
-			fmt.Println("Uploading the sketch")
-		}
-
 		f, err := os.Open(*sketchPath)
 		if err != nil {
 			if *verbose {
@@ -139,9 +142,44 @@ func main() {
 			}
 			os.Exit(1)
 		}
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-		resp, err := http.DefaultClient.Do(req)
+		if *binMode {
+			req.Header.Set("Content-Type", "application/octet-stream")
+		} else {
+			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		}
+
+		if len(*username) > 0 && len(*password) != 0 {
+			req.SetBasicAuth(*username, *password)
+		}
+
+		if *verbose {
+			trace := &httptrace.ClientTrace{
+				ConnectStart: func(network, addr string) {
+					fmt.Print("Connecting to board ... ")
+				},
+				ConnectDone: func(network, addr string, err error) {
+					if err != nil {
+						fmt.Println("failed!")
+					} else {
+						fmt.Println(" done")
+					}
+				},
+				WroteHeaders: func() {
+					fmt.Print("Uploading sketch ... ")
+				},
+				WroteRequest: func(wri httptrace.WroteRequestInfo) {
+					fmt.Println(" done")
+					fmt.Print("Flashing sketch ... ")
+				},
+				GotFirstResponseByte: func() {
+					fmt.Println(" done")
+				},
+			}
+			req = req.WithContext(httptrace.WithClientTrace(req.Context(), trace))
+		}
+
+		resp, err := httpClient.Do(req)
 		if err != nil {
 			if *verbose {
 				fmt.Println("Error flashing the sketch")
@@ -170,7 +208,7 @@ func main() {
 			fmt.Println("Resetting the board")
 		}
 
-		resp, err := http.Post(httpheader+*networkAddress+":"+*networkPort+*resetEndpoint, "", nil)
+		resp, err := httpClient.Post(httpheader+*networkAddress+":"+*networkPort+*resetEndpoint, "", nil)
 		if err != nil {
 			if *verbose {
 				fmt.Println("Failed to reset the board, please reset maually")
