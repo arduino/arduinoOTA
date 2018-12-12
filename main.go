@@ -139,7 +139,7 @@ func main() {
 		}
 
 		if *hasDownloadFile {
-			http.ListenAndServe(*networkPort, http.FileServer(http.Dir(filepath.Dir(*sketchPath))))
+			go http.ListenAndServe(":"+*networkPort, http.FileServer(http.Dir(filepath.Dir(*sketchPath))))
 			// find my ip if not specified
 			ip := getMyIP(net.ParseIP(*networkAddress))
 			url := "http://" + ip.String() + ":" + *networkPort + "/" + filepath.Base(*sketchPath)
@@ -257,7 +257,6 @@ func getMyIP(otherip net.IP) net.IP {
 			case *net.IPAddr:
 				ips = append(ips, v.IP)
 			}
-			// process IP address
 		}
 	}
 	return nil
