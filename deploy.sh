@@ -8,10 +8,11 @@ VERSION=`cat main.go| grep "const AppVersion" |cut -f4 -d " " | tr -d '"'`
 #Remember to set GOROOT accordingly with your installation
 
 export GOPATH=$PWD
+export CGO_ENABLED=false
 
 rm -rf distrib/
 
-declare -a target_folders=("linux_amd64" "linux_386" "linux_arm" "darwin_amd64" "windows_386")
+declare -a target_folders=("linux_amd64" "linux_386" "linux_arm" "darwin_amd64" "windows_386" "linux_arm64")
 
 mkdir distrib
 
