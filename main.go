@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"net/http/httptrace"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -20,20 +22,21 @@ const AppVersion = "1.2.0"
 var compileInfo string
 
 var (
-	version        = flag.Bool("version", false, "Prints program version")
-	networkAddress = flag.String("address", "localhost", "The address of the board")
-	networkPort    = flag.String("port", "80", "The board needs to be listening on this port")
-	username       = flag.String("username", "", "Username for authentication")
-	password       = flag.String("password", "", "Password for authentication")
-	sketchPath     = flag.String("sketch", "", "Sketch path")
-	uploadEndpoint = flag.String("upload", "", "Upload endpoint")
-	resetEndpoint  = flag.String("reset", "", "Upload endpoint")
-	syncEndpoint   = flag.String("sync", "", "Upload endpoint")
-	binMode        = flag.Bool("b", false, "Upload binary mode")
-	verbose        = flag.Bool("v", true, "Verbose flag")
-	quiet          = flag.Bool("q", false, "Quiet flag")
-	useSsl         = flag.String("ssl", "", "SSL flag")
-	syncRet        = flag.String("sync_exp", "", "sync expected return code in format code:string")
+	version         = flag.Bool("version", false, "Prints program version")
+	networkAddress  = flag.String("address", "localhost", "The address of the board")
+	networkPort     = flag.String("port", "80", "The board needs to be listening on this port")
+	username        = flag.String("username", "", "Username for authentication")
+	password        = flag.String("password", "", "Password for authentication")
+	sketchPath      = flag.String("sketch", "", "Sketch path")
+	uploadEndpoint  = flag.String("upload", "", "Upload endpoint")
+	resetEndpoint   = flag.String("reset", "", "Upload endpoint")
+	syncEndpoint    = flag.String("sync", "", "Upload endpoint")
+	binMode         = flag.Bool("b", false, "Upload binary mode")
+	verbose         = flag.Bool("v", true, "Verbose flag")
+	quiet           = flag.Bool("q", false, "Quiet flag")
+	useSsl          = flag.String("ssl", "", "SSL flag")
+	syncRet         = flag.String("sync_exp", "", "sync expected return code in format code:string")
+	hasDownloadFile = flag.Bool("d", false, "set to true to take advantage of downloadFile API")
 )
 
 type Item struct {
@@ -135,6 +138,15 @@ func main() {
 			sketchData = bytes.NewBufferString(str)
 		}
 
+		if *hasDownloadFile {
+			http.ListenAndServe(*networkPort, http.FileServer(http.Dir(filepath.Dir(*sketchPath))))
+			// find my ip if not specified
+			ip := getMyIP(net.ParseIP(*networkAddress))
+			url := "http://" + ip.String() + ":" + *networkPort + "/" + filepath.Base(*sketchPath)
+			sketchData = bytes.NewBufferString(url)
+			fmt.Println("Serving sketch on " + url)
+		}
+
 		req, err := http.NewRequest("POST", httpheader+*networkAddress+":"+*networkPort+*uploadEndpoint, sketchData)
 		if err != nil {
 			if *verbose {
@@ -227,4 +239,26 @@ func StreamToBytes(stream io.Reader) *bytes.Buffer {
 
 func StreamToString(stream io.Reader) string {
 	return StreamToBytes(stream).String()
+}
+
+func getMyIP(otherip net.IP) net.IP {
+	ifaces, _ := net.Interfaces()
+	// handle err
+	var ips []net.IP
+	for _, i := range ifaces {
+		addrs, _ := i.Addrs()
+		// handle err
+		for _, addr := range addrs {
+			switch v := addr.(type) {
+			case *net.IPNet:
+				if v.Contains(otherip) {
+					return v.IP
+				}
+			case *net.IPAddr:
+				ips = append(ips, v.IP)
+			}
+			// process IP address
+		}
+	}
+	return nil
 }
