@@ -12,7 +12,7 @@ export CGO_ENABLED=false
 
 rm -rf distrib/
 
-declare -a target_folders=("linux_amd64" "linux_386" "linux_arm" "darwin_amd64" "windows_386" "linux_arm64")
+declare -a target_folders=("linux_amd64" "linux_386" "linux_arm" "darwin_amd64" "windows_386" "linux_arm64" "linux_ppc64le")
 
 mkdir distrib
 
