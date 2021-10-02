@@ -19,7 +19,7 @@ mkdir distrib
 for folder in "${target_folders[@]}"
 do
 
-  IFS=_ read -a fields <<< "$folder"
+  IFS=_ read -r -a fields <<< "$folder"
   mkdir -p "distrib/${folder}/bin/"
   GOOS="${fields[0]}" GOARCH="${fields[1]}" go build -o "distrib/${folder}/bin/arduinoOTA" -ldflags "-X main.compileInfo=$COMPILEINFO" main.go
 done
