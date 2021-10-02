@@ -46,4 +46,3 @@ echo =======
 sha256sum arduinoOTA*
 echo =======
 shasum arduinoOTA*
-
