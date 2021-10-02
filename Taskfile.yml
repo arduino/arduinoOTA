@@ -45,6 +45,12 @@ tasks:
     cmds:
       - npx prettier --write .
 
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/poetry-task/Taskfile.yml
+  poetry:install-deps:
+    desc: Install dependencies managed by Poetry
+    cmds:
+      - poetry install --no-root
+
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-shell-task/Taskfile.yml
   shell:check:
     desc: Check for problems with shell scripts
@@ -112,3 +118,11 @@ tasks:
           exit 1
         fi
       - shfmt -w .
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-yaml-task/Taskfile.yml
+  yaml:lint:
+    desc: Check for problems with YAML files
+    deps:
+      - task: poetry:install-deps
+    cmds:
+      - poetry run yamllint --format {{default "colored" .YAMLLINT_FORMAT}} .
