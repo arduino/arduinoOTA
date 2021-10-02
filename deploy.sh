@@ -3,7 +3,7 @@ GIT_REV="$(git log --pretty=format:'%h' -n 1)"
 BUILD_DATE="$(date +%Y-%m-%d:%H:%M:%S)"
 COMPILEINFO="$(echo "+${GIT_REV}+${BUILD_DATE}" | tr -d '"')"
 
-VERSION="$(cat main.go| grep "const AppVersion" |cut -f4 -d " " | tr -d '"')"
+VERSION="$(grep "const AppVersion" main.go |cut -f4 -d " " | tr -d '"')"
 
 #Remember to set GOROOT accordingly with your installation
 
