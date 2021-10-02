@@ -3,7 +3,7 @@ GIT_REV="$(git log --pretty=format:'%h' -n 1)"
 BUILD_DATE="$(date +%Y-%m-%d:%H:%M:%S)"
 COMPILEINFO="$(echo "+${GIT_REV}+${BUILD_DATE}" | tr -d '"')"
 
-VERSION="$(grep "const AppVersion" main.go |cut -f4 -d " " | tr -d '"')"
+VERSION="$(grep "const AppVersion" main.go | cut -f4 -d " " | tr -d '"')"
 
 #Remember to set GOROOT accordingly with your installation
 
@@ -19,7 +19,7 @@ mkdir distrib
 for folder in "${target_folders[@]}"
 do
 
-  IFS=_ read -r -a fields <<< "$folder"
+  IFS=_ read -r -a fields <<<"$folder"
   mkdir -p "distrib/${folder}/bin/"
   GOOS="${fields[0]}" GOARCH="${fields[1]}" go build -o "distrib/${folder}/bin/arduinoOTA" -ldflags "-X main.compileInfo=$COMPILEINFO" main.go
 done
