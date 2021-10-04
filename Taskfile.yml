@@ -1,0 +1,204 @@
+# See: https://taskfile.dev/#/usage
+version: "3"
+
+tasks:
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-workflows-task/Taskfile.yml
+  ci:validate:
+    desc: Validate GitHub Actions workflows against their JSON schema
+    vars:
+      # Source: https://github.com/SchemaStore/schemastore/blob/master/src/schemas/json/github-workflow.json
+      WORKFLOW_SCHEMA_URL: https://json.schemastore.org/github-workflow
+      WORKFLOW_SCHEMA_PATH:
+        sh: mktemp -t workflow-schema-XXXXXXXXXX.json
+      WORKFLOWS_DATA_PATH: "./.github/workflows/*.{yml,yaml}"
+    cmds:
+      - |
+        wget \
+          --quiet \
+          --output-document="{{.WORKFLOW_SCHEMA_PATH}}" \
+          {{.WORKFLOW_SCHEMA_URL}}
+      - |
+        npx \
+          --package=ajv-cli \
+          --package=ajv-formats \
+          ajv validate \
+            --all-errors \
+            --strict=false \
+            -c ajv-formats \
+            -s "{{.WORKFLOW_SCHEMA_PATH}}" \
+            -d "{{.WORKFLOWS_DATA_PATH}}"
+
+  docs:generate:
+    desc: Create all generated documentation content
+    # This is an "umbrella" task used to call any documentation generation processes the project has.
+    # It can be left empty if there are none.
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-general-formatting-task/Taskfile.yml
+  general:check-formatting:
+    desc: Check basic formatting style of all files
+    cmds:
+      - |
+        if ! which ec &>/dev/null; then
+          echo "ec not found or not in PATH. Please install: https://github.com/editorconfig-checker/editorconfig-checker#installation"
+          exit 1
+        fi
+      - ec
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-prettier-formatting-task/Taskfile.yml
+  general:format-prettier:
+    desc: Format all supported files with Prettier
+    cmds:
+      - npx prettier --write .
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/spell-check-task/Taskfile.yml
+  general:check-spelling:
+    desc: Check for commonly misspelled words
+    deps:
+      - task: poetry:install-deps
+    cmds:
+      - poetry run codespell
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/spell-check-task/Taskfile.yml
+  general:correct-spelling:
+    desc: Correct commonly misspelled words where possible
+    deps:
+      - task: poetry:install-deps
+    cmds:
+      - poetry run codespell --write-changes
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-markdown-task/Taskfile.yml
+  markdown:check-links:
+    desc: Check for broken links
+    deps:
+      - task: docs:generate
+    cmds:
+      - |
+        if [[ "{{.OS}}" == "Windows_NT" ]]; then
+          # npx --call uses the native shell, which makes it too difficult to use npx for this application on Windows,
+          # so the Windows user is required to have markdown-link-check installed and in PATH.
+          if ! which markdown-link-check &>/dev/null; then
+            echo "markdown-link-check not found or not in PATH. Please install: https://github.com/tcort/markdown-link-check#readme"
+            exit 1
+          fi
+          # Default behavior of the task on Windows is to exit the task when the first broken link causes a non-zero
+          # exit status, but it's better to check all links before exiting.
+          set +o errexit
+          STATUS=0
+          # Using -regex instead of -name to avoid Task's behavior of globbing even when quoted on Windows
+          # The odd method for escaping . in the regex is required for windows compatibility because mvdan.cc/sh gives
+          # \ characters special treatment on Windows in an attempt to support them as path separators.
+          for file in $(find . -regex ".*[.]md"); do
+            markdown-link-check \
+              --quiet \
+              --config "./.markdown-link-check.json" \
+              "$file"
+            STATUS=$(( $STATUS + $? ))
+          done
+          exit $STATUS
+        else
+          npx --package=markdown-link-check --call='
+            STATUS=0
+            for file in $(find . -regex ".*[.]md"); do
+              markdown-link-check \
+                --quiet \
+                --config "./.markdown-link-check.json" \
+                "$file"
+              STATUS=$(( $STATUS + $? ))
+            done
+            exit $STATUS
+          '
+        fi
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-markdown-task/Taskfile.yml
+  markdown:fix:
+    desc: Automatically correct linting violations in Markdown files where possible
+    cmds:
+      - npx markdownlint-cli --fix "**/*.md"
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-markdown-task/Taskfile.yml
+  markdown:lint:
+    desc: Check for problems in Markdown files
+    cmds:
+      - npx markdownlint-cli "**/*.md"
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/poetry-task/Taskfile.yml
+  poetry:install-deps:
+    desc: Install dependencies managed by Poetry
+    cmds:
+      - poetry install --no-root
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-shell-task/Taskfile.yml
+  shell:check:
+    desc: Check for problems with shell scripts
+    cmds:
+      - |
+        if ! which shellcheck &>/dev/null; then
+          echo "shellcheck not installed or not in PATH. Please install: https://github.com/koalaman/shellcheck#installing"
+          exit 1
+        fi
+      - |
+        # There is something odd about shellcheck that causes the task to always exit on the first fail, despite any
+        # measures that would prevent this with any other command. So it's necessary to call shellcheck only once with
+        # the list of script paths as an argument. This could lead to exceeding the maximum command length on Windows if
+        # the repository contained a large number of scripts, but it's unlikely to happen in reality.
+        shellcheck \
+          --format={{default "tty" .SHELLCHECK_FORMAT}} \
+          $(
+            # The odd method for escaping . in the regex is required for windows compatibility because mvdan.cc/sh gives
+            # \ characters special treatment on Windows in an attempt to support them as path separators.
+            find . \
+              -path ".git" -prune -or \
+              \( \
+                -regextype posix-extended \
+                -regex '.*[.](bash|sh)' -and \
+                -type f \
+              \)
+          )
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-shell-task/Taskfile.yml
+  shell:check-mode:
+    desc: Check for non-executable shell scripts
+    cmds:
+      - |
+        EXIT_STATUS=0
+        while read -r nonExecutableScriptPath; do
+          # The while loop always runs once, even if no file was found
+          if [[ "$nonExecutableScriptPath" == "" ]]; then
+            continue
+          fi
+
+          echo "::error file=${nonExecutableScriptPath}::non-executable script file: $nonExecutableScriptPath";
+          EXIT_STATUS=1
+        done <<<"$(
+          # The odd approach to escaping `.` in the regex is required for windows compatibility because mvdan.cc/sh
+          # gives `\` characters special treatment on Windows in an attempt to support them as path separators.
+          find . \
+            -path ".git" -prune -or \
+            \( \
+              -regextype posix-extended \
+              -regex '.*[.](bash|sh)' -and \
+              -type f -and \
+              -not -executable \
+              -print \
+            \)
+        )"
+        exit $EXIT_STATUS
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-shell-task/Taskfile.yml
+  shell:format:
+    desc: Format shell script files
+    cmds:
+      - |
+        if ! which shfmt &>/dev/null; then
+          echo "shfmt not installed or not in PATH. Please install: https://github.com/mvdan/sh#shfmt"
+          exit 1
+        fi
+      - shfmt -w .
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-yaml-task/Taskfile.yml
+  yaml:lint:
+    desc: Check for problems with YAML files
+    deps:
+      - task: poetry:install-deps
+    cmds:
+      - poetry run yamllint --format {{default "colored" .YAMLLINT_FORMAT}} .
