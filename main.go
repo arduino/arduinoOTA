@@ -37,6 +37,7 @@ var (
 	useSsl          = flag.String("ssl", "", "SSL flag")
 	syncRet         = flag.String("sync_exp", "", "sync expected return code in format code:string")
 	hasDownloadFile = flag.Bool("d", false, "set to true to take advantage of downloadFile API")
+	timeoutSeconds  = flag.Int("t", 10, "Upload timeout")
 )
 
 type Item struct {
@@ -53,7 +54,7 @@ func main() {
 	}
 
 	var httpClient = &http.Client{
-		Timeout: time.Second * 10,
+		Timeout: time.Second * time.Duration(*timeoutSeconds),
 	}
 
 	httpheader := "http://"
