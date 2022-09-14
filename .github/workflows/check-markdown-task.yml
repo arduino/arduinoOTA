@@ -1,6 +1,10 @@
 # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/check-markdown-task.md
 name: Check Markdown
 
+env:
+  # See: https://github.com/actions/setup-node/#readme
+  NODE_VERSION: 16.x
+
 # See: https://docs.github.com/actions/using-workflows/events-that-trigger-workflows
 on:
   create:
@@ -8,6 +12,8 @@ on:
     paths:
       - ".github/workflows/check-markdown-task.ya?ml"
       - ".markdown-link-check.json"
+      - "package.json"
+      - "package-lock.json"
       - "Taskfile.ya?ml"
       - "**/.markdownlint*"
       - "**.mdx?"
@@ -18,6 +24,8 @@ on:
     paths:
       - ".github/workflows/check-markdown-task.ya?ml"
       - ".markdown-link-check.json"
+      - "package.json"
+      - "package-lock.json"
       - "Taskfile.ya?ml"
       - "**/.markdownlint*"
       - "**.mdx?"
@@ -63,6 +71,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
       - name: Initialize markdownlint-cli problem matcher
         uses: xt0rted/markdownlint-problem-matcher@v1
 
@@ -83,6 +96,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install Task
         uses: arduino/setup-task@v1
