@@ -87,7 +87,14 @@ tasks:
           # Using -regex instead of -name to avoid Task's behavior of globbing even when quoted on Windows
           # The odd method for escaping . in the regex is required for windows compatibility because mvdan.cc/sh gives
           # \ characters special treatment on Windows in an attempt to support them as path separators.
-          for file in $(find . -regex ".*[.]md"); do
+          for file in $(
+            find . \
+              -type d -name '.git' -prune -o \
+              -type d -name '.licenses' -prune -o \
+              -type d -name '__pycache__' -prune -o \
+              -type d -name 'node_modules' -prune -o \
+              -regex ".*[.]md" -print
+          ); do
             markdown-link-check \
               --quiet \
               --config "./.markdown-link-check.json" \
@@ -98,7 +105,14 @@ tasks:
         else
           npx --package=markdown-link-check --call='
             STATUS=0
-            for file in $(find . -regex ".*[.]md"); do
+            for file in $(
+              find . \
+                -type d -name '.git' -prune -o \
+                -type d -name '.licenses' -prune -o \
+                -type d -name '__pycache__' -prune -o \
+                -type d -name 'node_modules' -prune -o \
+                -regex ".*[.]md" -print
+            ); do
               markdown-link-check \
                 --quiet \
                 --config "./.markdown-link-check.json" \
@@ -147,12 +161,16 @@ tasks:
             # The odd method for escaping . in the regex is required for windows compatibility because mvdan.cc/sh gives
             # \ characters special treatment on Windows in an attempt to support them as path separators.
             find . \
-              -path ".git" -prune -or \
+              -type d -name '.git' -prune -or \
+              -type d -name '.licenses' -prune -or \
+              -type d -name '__pycache__' -prune -or \
+              -type d -name 'node_modules' -prune -or \
               \( \
                 -regextype posix-extended \
                 -regex '.*[.](bash|sh)' -and \
                 -type f \
-              \)
+              \) \
+              -print
           )
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-shell-task/Taskfile.yml
@@ -173,7 +191,10 @@ tasks:
           # The odd approach to escaping `.` in the regex is required for windows compatibility because mvdan.cc/sh
           # gives `\` characters special treatment on Windows in an attempt to support them as path separators.
           find . \
-            -path ".git" -prune -or \
+            -type d -name '.git' -prune -or \
+            -type d -name '.licenses' -prune -or \
+            -type d -name '__pycache__' -prune -or \
+            -type d -name 'node_modules' -prune -or \
             \( \
               -regextype posix-extended \
               -regex '.*[.](bash|sh)' -and \
