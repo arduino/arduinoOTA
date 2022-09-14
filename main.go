@@ -17,6 +17,7 @@ import (
 	"time"
 )
 
+// AppVersion is the application version.
 const AppVersion = "1.3.0"
 
 var compileInfo string
@@ -39,11 +40,6 @@ var (
 	hasDownloadFile = flag.Bool("d", false, "set to true to take advantage of downloadFile API")
 	timeoutSeconds  = flag.Int("t", 10, "Upload timeout")
 )
-
-type Item struct {
-	Id   int
-	Name string
-}
 
 func main() {
 	flag.Parse()
@@ -131,9 +127,9 @@ func main() {
 		var sketchData *bytes.Buffer
 
 		if *binMode {
-			sketchData = StreamToBytes(f)
+			sketchData = streamToBytes(f)
 		} else {
-			str := StreamToString(f)
+			str := streamToString(f)
 			re := regexp.MustCompile(`\r?\n`)
 			str = re.ReplaceAllString(str, "")
 			sketchData = bytes.NewBufferString(str)
@@ -232,14 +228,14 @@ func main() {
 	}
 }
 
-func StreamToBytes(stream io.Reader) *bytes.Buffer {
+func streamToBytes(stream io.Reader) *bytes.Buffer {
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(stream)
 	return buf
 }
 
-func StreamToString(stream io.Reader) string {
-	return StreamToBytes(stream).String()
+func streamToString(stream io.Reader) string {
+	return streamToBytes(stream).String()
 }
 
 func getMyIP(otherip net.IP) net.IP {
