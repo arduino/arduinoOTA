@@ -41,11 +41,6 @@ var (
 	timeoutSeconds  = flag.Int("t", 10, "Upload timeout")
 )
 
-type Item struct {
-	Id   int
-	Name string
-}
-
 func main() {
 	flag.Parse()
 
