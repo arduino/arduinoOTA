@@ -17,6 +17,7 @@ import (
 	"time"
 )
 
+// AppVersion is the application version.
 const AppVersion = "1.3.0"
 
 var compileInfo string
