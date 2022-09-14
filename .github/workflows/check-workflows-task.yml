@@ -1,15 +1,23 @@
 # Source: https://github.com/arduino/tooling-project-assets/blob/master/workflow-templates/check-workflows-task.md
 name: Check Workflows
 
-# See: https://docs.github.com/en/actions/reference/events-that-trigger-workflows
+env:
+  # See: https://github.com/actions/setup-node/#readme
+  NODE_VERSION: 16.x
+
+# See: https://docs.github.com/actions/using-workflows/events-that-trigger-workflows
 on:
   push:
     paths:
       - ".github/workflows/*.ya?ml"
+      - "package.json"
+      - "package-lock.json"
       - "Taskfile.ya?ml"
   pull_request:
     paths:
       - ".github/workflows/*.ya?ml"
+      - "package.json"
+      - "package-lock.json"
       - "Taskfile.ya?ml"
   schedule:
     # Run every Tuesday at 8 AM UTC to catch breakage resulting from changes to the JSON schema.
@@ -24,6 +32,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install Task
         uses: arduino/setup-task@v1

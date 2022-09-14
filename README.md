@@ -1,6 +1,7 @@
 # arduinoOTA
 
 [![Check General Formatting status](https://github.com/arduino/arduinoOTA/actions/workflows/check-general-formatting-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-general-formatting-task.yml)
+[![Check npm status](https://github.com/arduino/arduinoOTA/actions/workflows/check-npm-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-npm-task.yml)
 [![Check Prettier Formatting status](https://github.com/arduino/arduinoOTA/actions/workflows/check-prettier-formatting-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-prettier-formatting-task.yml)
 [![Spell Check status](https://github.com/arduino/arduinoOTA/actions/workflows/spell-check-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/spell-check-task.yml)
 [![Check Markdown status](https://github.com/arduino/arduinoOTA/actions/workflows/check-markdown-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-markdown-task.yml)
@@ -9,7 +10,7 @@
 [![Check Workflows status](https://github.com/arduino/arduinoOTA/actions/workflows/check-workflows-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-workflows-task.yml)
 [![Check YAML status](https://github.com/arduino/arduinoOTA/actions/workflows/check-yaml-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-yaml-task.yml)
 [![Check License status](https://github.com/arduino/arduinoOTA/actions/workflows/check-license.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-license.yml)
-[![Sync Labels status](https://github.com/arduino/arduinoOTA/actions/workflows/sync-labels.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/sync-labels.yml)
+[![Sync Labels status](https://github.com/arduino/arduinoOTA/actions/workflows/sync-labels-npm.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/sync-labels-npm.yml)
 
 **arduinoOTA** is a tool for uploading programs to [Arduino](https://arduino.cc/) boards over a network.
 

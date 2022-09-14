@@ -72,3 +72,5 @@ yaml-files:
 
 ignore: |
   /.git/
+  __pycache__/
+  node_modules/

@@ -11,3 +11,21 @@ updates:
       interval: daily
     labels:
       - "topic: infrastructure"
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    labels:
+      - "topic: infrastructure"
+    assignees:
+      - per1234
+
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: daily
+    labels:
+      - "topic: infrastructure"
+    assignees:
+      - per1234
