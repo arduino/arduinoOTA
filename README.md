@@ -1,6 +1,7 @@
 # arduinoOTA
 
 [![Check General Formatting status](https://github.com/arduino/arduinoOTA/actions/workflows/check-general-formatting-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-general-formatting-task.yml)
+[![Check Go Dependencies status](https://github.com/arduino/arduinoOTA/actions/workflows/check-go-dependencies-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-go-dependencies-task.yml)
 [![Check Go status](https://github.com/arduino/arduinoOTA/actions/workflows/check-go-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-go-task.yml)
 [![Check npm status](https://github.com/arduino/arduinoOTA/actions/workflows/check-npm-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-npm-task.yml)
 [![Check Prettier Formatting status](https://github.com/arduino/arduinoOTA/actions/workflows/check-prettier-formatting-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-prettier-formatting-task.yml)
