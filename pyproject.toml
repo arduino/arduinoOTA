@@ -9,7 +9,7 @@ python = "^3.9"
 
 [tool.poetry.dev-dependencies]
 yamllint = "^1.28.0"
-codespell = "^2.2.1"
+codespell = "^2.2.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
