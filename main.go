@@ -15,10 +15,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
-)
 
-// AppVersion is the application version.
-const AppVersion = "1.3.0"
+	"github.com/arduino/arduinoOTA/globals"
+)
 
 var compileInfo string
 
@@ -45,7 +44,7 @@ func main() {
 	flag.Parse()
 
 	if *version {
-		fmt.Println(AppVersion + compileInfo)
+		fmt.Println(globals.VersionInfo.String() + compileInfo)
 		os.Exit(0)
 	}
 
