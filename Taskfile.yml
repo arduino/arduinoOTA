@@ -1,7 +1,31 @@
 # See: https://taskfile.dev/#/usage
 version: "3"
 
+includes:
+  dist: ./DistTasks.yml
+
 vars:
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/release-go-task/Taskfile.yml
+  PROJECT_NAME: "arduinoOTA"
+  DIST_DIR: "dist"
+  # build vars
+  COMMIT:
+    sh: echo "$(git log --no-show-signature -n 1 --format=%h)"
+  TIMESTAMP:
+    sh: echo "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  TIMESTAMP_SHORT:
+    sh: echo "{{now | date "20060102"}}"
+  TAG:
+    sh: echo "$(git tag --points-at=HEAD 2> /dev/null | head -n1)"
+  VERSION: "{{if .NIGHTLY}}nightly-{{.TIMESTAMP_SHORT}}{{else if .TAG}}{{.TAG}}{{else}}{{.PACKAGE_NAME_PREFIX}}git-snapshot{{end}}"
+  CONFIGURATION_PACKAGE: "github.com/arduino/arduinoOTA/version"
+  LDFLAGS: >-
+    -ldflags
+    '
+    -X {{.CONFIGURATION_PACKAGE}}.versionString={{.VERSION}}
+    -X {{.CONFIGURATION_PACKAGE}}.commit={{.COMMIT}}
+    -X {{.CONFIGURATION_PACKAGE}}.date={{.TIMESTAMP}}
+    '
   # Path of the project's primary Go module:
   DEFAULT_GO_MODULE_PATH: ./
   DEFAULT_GO_PACKAGES:

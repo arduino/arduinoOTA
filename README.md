@@ -13,6 +13,7 @@
 [![Check YAML status](https://github.com/arduino/arduinoOTA/actions/workflows/check-yaml-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-yaml-task.yml)
 [![Check License status](https://github.com/arduino/arduinoOTA/actions/workflows/check-license.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-license.yml)
 [![Sync Labels status](https://github.com/arduino/arduinoOTA/actions/workflows/sync-labels-npm.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/sync-labels-npm.yml)
+[![Release status](https://github.com/arduino/arduinoOTA/actions/workflows/release-go-crosscompile-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/release-go-crosscompile-task.yml)
 
 **arduinoOTA** is a tool for uploading programs to [Arduino](https://arduino.cc/) boards over a network.
 
