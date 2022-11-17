@@ -7,7 +7,6 @@
 [![Check Prettier Formatting status](https://github.com/arduino/arduinoOTA/actions/workflows/check-prettier-formatting-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-prettier-formatting-task.yml)
 [![Spell Check status](https://github.com/arduino/arduinoOTA/actions/workflows/spell-check-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/spell-check-task.yml)
 [![Check Markdown status](https://github.com/arduino/arduinoOTA/actions/workflows/check-markdown-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-markdown-task.yml)
-[![Check Shell Scripts status](https://github.com/arduino/arduinoOTA/actions/workflows/check-shell-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-shell-task.yml)
 [![Check Taskfiles status](https://github.com/arduino/arduinoOTA/actions/workflows/check-taskfiles.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-taskfiles.yml)
 [![Check Workflows status](https://github.com/arduino/arduinoOTA/actions/workflows/check-workflows-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-workflows-task.yml)
 [![Check YAML status](https://github.com/arduino/arduinoOTA/actions/workflows/check-yaml-task.yml/badge.svg)](https://github.com/arduino/arduinoOTA/actions/workflows/check-yaml-task.yml)
