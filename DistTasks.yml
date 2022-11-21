@@ -1,0 +1,158 @@
+# Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/release-go-crosscompile-task/DistTasks.yml
+version: "3"
+
+# This taskfile is ideally meant to be project agnostic and could be dropped in
+# on other Go projects with minimal or no changes.
+#
+# To use it simply add the following lines to your main taskfile:
+#   includes:
+#     dist: ./DistTasks.yml
+#
+# The following variables must be declared in the including taskfile for the
+# build process to work correctly:
+# * DIST_DIR: the folder that will contain the final binaries and packages
+# * PROJECT_NAME: the name of the project, used in package name
+# * VERSION: the version of the project, used in package name and checksum file
+# * LD_FLAGS: flags used at build time
+#
+# The project MUST contain a LICENSE.txt file in the root folder or packaging will fail.
+
+tasks:
+  Windows_32bit:
+    desc: Builds Windows 32 bit binaries
+    env:
+      GOOS: "windows"
+      GOARCH: "386"
+      GO386: "softfloat"
+    cmds:
+      - |
+        go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}}.exe {{.LDFLAGS}}
+        cd {{.DIST_DIR}}
+        zip {{.PACKAGE_NAME}} {{.PLATFORM_DIR}}/{{.PROJECT_NAME}}.exe ../LICENSE.txt -j
+    vars:
+      PLATFORM_DIR: "{{.PROJECT_NAME}}_windows_386"
+      PACKAGE_PLATFORM: "Windows_32bit"
+      PACKAGE_NAME: "{{.PROJECT_NAME}}_{{.VERSION}}_{{.PACKAGE_PLATFORM}}.zip"
+
+  Windows_64bit:
+    desc: Builds Windows 64 bit binaries
+    env:
+      GOOS: "windows"
+      GOARCH: "amd64"
+    cmds:
+      - |
+        go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}}.exe {{.LDFLAGS}}
+        cd {{.DIST_DIR}}
+        zip {{.PACKAGE_NAME}} {{.PLATFORM_DIR}}/{{.PROJECT_NAME}}.exe ../LICENSE.txt -j
+    vars:
+      PLATFORM_DIR: "{{.PROJECT_NAME}}_windows_amd64"
+      PACKAGE_PLATFORM: "Windows_64bit"
+      PACKAGE_NAME: "{{.PROJECT_NAME}}_{{.VERSION}}_{{.PACKAGE_PLATFORM}}.zip"
+
+  Linux_32bit:
+    desc: Builds Linux 32 bit binaries
+    env:
+      GOOS: "linux"
+      GOARCH: "386"
+      GO386: "softfloat"
+    cmds:
+      - |
+        go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}} {{.LDFLAGS}}
+        cd {{.DIST_DIR}}
+        tar cz -C {{.PLATFORM_DIR}} {{.PROJECT_NAME}} -C ../.. LICENSE.txt  -f {{.PACKAGE_NAME}}
+    vars:
+      PLATFORM_DIR: "{{.PROJECT_NAME}}_linux_amd32"
+      PACKAGE_PLATFORM: "Linux_32bit"
+      PACKAGE_NAME: "{{.PROJECT_NAME}}_{{.VERSION}}_{{.PACKAGE_PLATFORM}}.tar.gz"
+
+  Linux_64bit:
+    desc: Builds Linux 64 bit binaries
+    env:
+      GOOS: "linux"
+      GOARCH: "amd64"
+    cmds:
+      - |
+        go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}} {{.LDFLAGS}}
+        cd {{.DIST_DIR}}
+        tar cz -C {{.PLATFORM_DIR}} {{.PROJECT_NAME}} -C ../.. LICENSE.txt  -f {{.PACKAGE_NAME}}
+    vars:
+      PLATFORM_DIR: "{{.PROJECT_NAME}}_linux_amd64"
+      PACKAGE_PLATFORM: "Linux_64bit"
+      PACKAGE_NAME: "{{.PROJECT_NAME}}_{{.VERSION}}_{{.PACKAGE_PLATFORM}}.tar.gz"
+
+  Linux_ARMv7:
+    desc: Builds Linux ARMv7 binaries
+    env:
+      GOOS: "linux"
+      GOARCH: "arm"
+      GOARM: 7
+    cmds:
+      - |
+        go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}} {{.LDFLAGS}}
+        cd {{.DIST_DIR}}
+        tar cz -C {{.PLATFORM_DIR}} {{.PROJECT_NAME}} -C ../.. LICENSE.txt  -f {{.PACKAGE_NAME}}
+    vars:
+      PLATFORM_DIR: "{{.PROJECT_NAME}}_linux_arm_7"
+      PACKAGE_PLATFORM: "Linux_ARMv7"
+      PACKAGE_NAME: "{{.PROJECT_NAME}}_{{.VERSION}}_{{.PACKAGE_PLATFORM}}.tar.gz"
+
+  Linux_ARMv6:
+    desc: Builds Linux ARMv6 binaries
+    env:
+      GOOS: "linux"
+      GOARCH: "arm"
+      GOARM: 6
+    cmds:
+      - |
+        go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}} {{.LDFLAGS}}
+        cd {{.DIST_DIR}}
+        tar cz -C {{.PLATFORM_DIR}} {{.PROJECT_NAME}} -C ../.. LICENSE.txt  -f {{.PACKAGE_NAME}}
+    vars:
+      PLATFORM_DIR: "{{.PROJECT_NAME}}_linux_arm_6"
+      PACKAGE_PLATFORM: "Linux_ARMv6"
+      PACKAGE_NAME: "{{.PROJECT_NAME}}_{{.VERSION}}_{{.PACKAGE_PLATFORM}}.tar.gz"
+
+  Linux_ARM64:
+    desc: Builds Linux ARM64 binaries
+    env:
+      GOOS: "linux"
+      GOARCH: "arm64"
+    cmds:
+      - |
+        go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}} {{.LDFLAGS}}
+        cd {{.DIST_DIR}}
+        tar cz -C {{.PLATFORM_DIR}} {{.PROJECT_NAME}} -C ../.. LICENSE.txt  -f {{.PACKAGE_NAME}}
+    vars:
+      PLATFORM_DIR: "{{.PROJECT_NAME}}_linux_arm_64"
+      PACKAGE_PLATFORM: "Linux_ARM64"
+      PACKAGE_NAME: "{{.PROJECT_NAME}}_{{.VERSION}}_{{.PACKAGE_PLATFORM}}.tar.gz"
+
+  macOS_64bit:
+    desc: Builds Mac OS X 64 bit binaries
+    env:
+      GOOS: "darwin"
+      GOARCH: "amd64"
+    cmds:
+      - |
+        go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}} {{.LDFLAGS}}
+        cd {{.DIST_DIR}}
+        tar cz -C {{.PLATFORM_DIR}} {{.PROJECT_NAME}} -C ../.. LICENSE.txt  -f {{.PACKAGE_NAME}}
+    vars:
+      PLATFORM_DIR: "{{.PROJECT_NAME}}_osx_darwin_amd64"
+      PACKAGE_PLATFORM: "macOS_64bit"
+      PACKAGE_NAME: "{{.PROJECT_NAME}}_{{.VERSION}}_{{.PACKAGE_PLATFORM}}.tar.gz"
+
+  macOS_ARM64:
+    desc: Builds Mac OS X ARM64 binaries
+    env:
+      GOOS: "darwin"
+      GOARCH: "arm64"
+    cmds:
+      - |
+        go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}} {{.LDFLAGS}}
+        cd {{.DIST_DIR}}
+        tar cz -C {{.PLATFORM_DIR}} {{.PROJECT_NAME}} -C ../.. LICENSE.txt  -f {{.PACKAGE_NAME}}
+    vars:
+      PLATFORM_DIR: "{{.PROJECT_NAME}}_osx_darwin_arm64"
+      PACKAGE_PLATFORM: "macOS_ARM64"
+      PACKAGE_NAME: "{{.PROJECT_NAME}}_{{.VERSION}}_{{.PACKAGE_PLATFORM}}.tar.gz"
