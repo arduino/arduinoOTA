@@ -28,7 +28,8 @@ tasks:
       - |
         go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}}.exe {{.LDFLAGS}}
         cd {{.DIST_DIR}}
-        zip {{.PACKAGE_NAME}} {{.PLATFORM_DIR}}/{{.PROJECT_NAME}}.exe ../LICENSE.txt -j
+        cp ../LICENSE.txt {{.PLATFORM_DIR}}/
+        zip {{.PACKAGE_NAME}} {{.PLATFORM_DIR}}/{{.PROJECT_NAME}}.exe {{.PLATFORM_DIR}}/LICENSE.txt
     vars:
       PLATFORM_DIR: "{{.PROJECT_NAME}}_windows_386"
       PACKAGE_PLATFORM: "Windows_32bit"
@@ -43,7 +44,8 @@ tasks:
       - |
         go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}}.exe {{.LDFLAGS}}
         cd {{.DIST_DIR}}
-        zip {{.PACKAGE_NAME}} {{.PLATFORM_DIR}}/{{.PROJECT_NAME}}.exe ../LICENSE.txt -j
+        cp ../LICENSE.txt {{.PLATFORM_DIR}}/
+        zip {{.PACKAGE_NAME}} {{.PLATFORM_DIR}}/{{.PROJECT_NAME}}.exe {{.PLATFORM_DIR}}/LICENSE.txt
     vars:
       PLATFORM_DIR: "{{.PROJECT_NAME}}_windows_amd64"
       PACKAGE_PLATFORM: "Windows_64bit"
@@ -59,7 +61,8 @@ tasks:
       - |
         go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}} {{.LDFLAGS}}
         cd {{.DIST_DIR}}
-        tar cz -C {{.PLATFORM_DIR}} {{.PROJECT_NAME}} -C ../.. LICENSE.txt  -f {{.PACKAGE_NAME}}
+        cp ../LICENSE.txt {{.PLATFORM_DIR}}/
+        tar cz {{.PLATFORM_DIR}} -f {{.PACKAGE_NAME}}
     vars:
       PLATFORM_DIR: "{{.PROJECT_NAME}}_linux_amd32"
       PACKAGE_PLATFORM: "Linux_32bit"
@@ -74,7 +77,8 @@ tasks:
       - |
         go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}} {{.LDFLAGS}}
         cd {{.DIST_DIR}}
-        tar cz -C {{.PLATFORM_DIR}} {{.PROJECT_NAME}} -C ../.. LICENSE.txt  -f {{.PACKAGE_NAME}}
+        cp ../LICENSE.txt {{.PLATFORM_DIR}}/
+        tar cz {{.PLATFORM_DIR}} -f {{.PACKAGE_NAME}}
     vars:
       PLATFORM_DIR: "{{.PROJECT_NAME}}_linux_amd64"
       PACKAGE_PLATFORM: "Linux_64bit"
@@ -90,7 +94,8 @@ tasks:
       - |
         go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}} {{.LDFLAGS}}
         cd {{.DIST_DIR}}
-        tar cz -C {{.PLATFORM_DIR}} {{.PROJECT_NAME}} -C ../.. LICENSE.txt  -f {{.PACKAGE_NAME}}
+        cp ../LICENSE.txt {{.PLATFORM_DIR}}/
+        tar cz {{.PLATFORM_DIR}} -f {{.PACKAGE_NAME}}
     vars:
       PLATFORM_DIR: "{{.PROJECT_NAME}}_linux_arm_7"
       PACKAGE_PLATFORM: "Linux_ARMv7"
@@ -106,7 +111,8 @@ tasks:
       - |
         go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}} {{.LDFLAGS}}
         cd {{.DIST_DIR}}
-        tar cz -C {{.PLATFORM_DIR}} {{.PROJECT_NAME}} -C ../.. LICENSE.txt  -f {{.PACKAGE_NAME}}
+        cp ../LICENSE.txt {{.PLATFORM_DIR}}/
+        tar cz {{.PLATFORM_DIR}} -f {{.PACKAGE_NAME}}
     vars:
       PLATFORM_DIR: "{{.PROJECT_NAME}}_linux_arm_6"
       PACKAGE_PLATFORM: "Linux_ARMv6"
@@ -121,7 +127,8 @@ tasks:
       - |
         go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}} {{.LDFLAGS}}
         cd {{.DIST_DIR}}
-        tar cz -C {{.PLATFORM_DIR}} {{.PROJECT_NAME}} -C ../.. LICENSE.txt  -f {{.PACKAGE_NAME}}
+        cp ../LICENSE.txt {{.PLATFORM_DIR}}/
+        tar cz {{.PLATFORM_DIR}} -f {{.PACKAGE_NAME}}
     vars:
       PLATFORM_DIR: "{{.PROJECT_NAME}}_linux_arm_64"
       PACKAGE_PLATFORM: "Linux_ARM64"
@@ -136,7 +143,8 @@ tasks:
       - |
         go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}} {{.LDFLAGS}}
         cd {{.DIST_DIR}}
-        tar cz -C {{.PLATFORM_DIR}} {{.PROJECT_NAME}} -C ../.. LICENSE.txt  -f {{.PACKAGE_NAME}}
+        cp ../LICENSE.txt {{.PLATFORM_DIR}}/
+        tar cz {{.PLATFORM_DIR}} -f {{.PACKAGE_NAME}}
     vars:
       PLATFORM_DIR: "{{.PROJECT_NAME}}_osx_darwin_amd64"
       PACKAGE_PLATFORM: "macOS_64bit"
@@ -151,7 +159,8 @@ tasks:
       - |
         go build -o {{.DIST_DIR}}/{{.PLATFORM_DIR}}/{{.PROJECT_NAME}} {{.LDFLAGS}}
         cd {{.DIST_DIR}}
-        tar cz -C {{.PLATFORM_DIR}} {{.PROJECT_NAME}} -C ../.. LICENSE.txt  -f {{.PACKAGE_NAME}}
+        cp ../LICENSE.txt {{.PLATFORM_DIR}}/
+        tar cz {{.PLATFORM_DIR}} -f {{.PACKAGE_NAME}}
     vars:
       PLATFORM_DIR: "{{.PROJECT_NAME}}_osx_darwin_arm64"
       PACKAGE_PLATFORM: "macOS_ARM64"
