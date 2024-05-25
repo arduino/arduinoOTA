@@ -136,7 +136,7 @@ func main() {
 
 		if *hasDownloadFile {
 			go http.ListenAndServe(":"+*networkPort, http.FileServer(http.Dir(filepath.Dir(*sketchPath))))
-			// find my ip if not specified
+			// find my IP if not specified
 			ip := getMyIP(net.ParseIP(*networkAddress))
 			url := "http://" + ip.String() + ":" + *networkPort + "/" + filepath.Base(*sketchPath)
 			sketchData = bytes.NewBufferString(url)
@@ -219,7 +219,7 @@ func main() {
 		resp, err := httpClient.Post(httpheader+*networkAddress+":"+*networkPort+*resetEndpoint, "", nil)
 		if err != nil {
 			if *verbose {
-				fmt.Println("Failed to reset the board, please reset maually")
+				fmt.Println("Failed to reset the board, please reset manually")
 			}
 			os.Exit(0)
 		}
