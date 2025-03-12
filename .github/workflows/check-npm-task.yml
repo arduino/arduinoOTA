@@ -30,7 +30,14 @@ permissions:
 
 jobs:
   validate:
+    name: validate (${{ matrix.project.path }})
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - path: .
 
     steps:
       - name: Checkout repository
@@ -48,7 +55,11 @@ jobs:
           version: 3.x
 
       - name: Validate package.json
-        run: task --silent npm:validate
+        run: |
+          task \
+            --silent \
+            npm:validate \
+            PROJECT_PATH="${{ matrix.project.path }}"
 
   check-sync:
     name: check-sync (${{ matrix.project.path }})
