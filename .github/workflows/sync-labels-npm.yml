@@ -13,12 +13,14 @@ on:
       - ".github/label-configuration-files/*.ya?ml"
       - "package.json"
       - "package-lock.json"
+      - "**/.npmrc"
   pull_request:
     paths:
       - ".github/workflows/sync-labels-npm.ya?ml"
       - ".github/label-configuration-files/*.ya?ml"
       - "package.json"
       - "package-lock.json"
+      - "**/.npmrc"
   schedule:
     # Run daily at 8 AM UTC to sync with changes to shared label configurations.
     - cron: "0 8 * * *"
