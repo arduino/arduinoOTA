@@ -299,10 +299,6 @@ tasks:
         sh: task utility:mktemp-file TEMPLATE="stylelintrc-schema-XXXXXXXXXX.json"
       INSTANCE_PATH: >-
         {{default .DEFAULT_NPM_PROJECT_PATH .PROJECT_PATH}}/package.json
-      PROJECT_FOLDER:
-        sh: pwd
-      WORKING_FOLDER:
-        sh: task utility:mktemp-folder TEMPLATE="dependabot-validate-XXXXXXXXXX"
     cmds:
       - wget --quiet --output-document="{{.SCHEMA_PATH}}" {{.SCHEMA_URL}}
       - wget --quiet --output-document="{{.AVA_SCHEMA_PATH}}" {{.AVA_SCHEMA_URL}}
