@@ -155,4 +155,7 @@ jobs:
           version: 3.x
 
       - name: Check for dependencies with unapproved licenses
-        run: task --silent general:check-dep-licenses
+        run: |
+          task \
+            --silent \
+            general:check-dep-licenses

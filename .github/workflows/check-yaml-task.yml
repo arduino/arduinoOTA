@@ -114,4 +114,7 @@ jobs:
 
       - name: Check YAML
         continue-on-error: ${{ matrix.configuration.continue-on-error }}
-        run: task yaml:lint YAMLLINT_FORMAT=${{ matrix.configuration.format }}
+        run: |
+          task \
+            yaml:lint \
+            YAMLLINT_FORMAT=${{ matrix.configuration.format }}
