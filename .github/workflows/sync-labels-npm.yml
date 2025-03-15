@@ -5,7 +5,7 @@ env:
   CONFIGURATIONS_FOLDER: .github/label-configuration-files
   CONFIGURATIONS_ARTIFACT_PREFIX: label-configuration-file-
 
-# See: https://docs.github.com/actions/using-workflows/events-that-trigger-workflows
+# See: https://docs.github.com/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows
 on:
   push:
     paths:
@@ -96,7 +96,7 @@ jobs:
     steps:
       - name: Set environment variables
         run: |
-          # See: https://docs.github.com/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable
+          # See: https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#setting-an-environment-variable
           echo "MERGED_CONFIGURATION_PATH=${{ runner.temp }}/labels.yml" >> "$GITHUB_ENV"
 
       - name: Determine whether to dry run

@@ -53,7 +53,7 @@ rules:
     check-keys: true
 
 yaml-files:
-  # Source: https://github.com/ikatyang/linguist-languages/blob/master/data/YAML.json (used by Prettier)
+  # Source: https://github.com/ikatyang-collab/linguist-languages/blob/main/data/YAML.js (used by Prettier)
   - ".clang-format"
   - ".clang-tidy"
   - ".gemrc"
