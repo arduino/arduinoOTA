@@ -1,10 +1,6 @@
 # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/check-go-task.md
 name: Check Go
 
-env:
-  # See: https://github.com/actions/setup-go/tree/main#supported-version-syntax
-  GO_VERSION: "1.17"
-
 # See: https://docs.github.com/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows
 on:
   create:
@@ -75,7 +71,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: ${{ env.GO_VERSION }}
+          go-version-file: ${{ matrix.module.path }}/go.mod
 
       - name: Install Task
         uses: arduino/setup-task@v2
@@ -110,7 +106,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: ${{ env.GO_VERSION }}
+          go-version-file: ${{ matrix.module.path }}/go.mod
 
       - name: Install Task
         uses: arduino/setup-task@v2
@@ -152,7 +148,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: ${{ env.GO_VERSION }}
+          go-version-file: ${{ matrix.module.path }}/go.mod
 
       - name: Install Task
         uses: arduino/setup-task@v2
@@ -190,7 +186,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: ${{ env.GO_VERSION }}
+          go-version-file: ${{ matrix.module.path }}/go.mod
 
       - name: Install Task
         uses: arduino/setup-task@v2
@@ -223,7 +219,7 @@ jobs:
 
       matrix:
         module:
-          - path: ./
+          - path: .
 
     steps:
       - name: Checkout repository
@@ -232,7 +228,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: ${{ env.GO_VERSION }}
+          go-version-file: ${{ matrix.module.path }}/go.mod
 
       - name: Run go mod tidy
         working-directory: ${{ matrix.module.path }}
