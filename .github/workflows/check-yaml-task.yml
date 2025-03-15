@@ -69,7 +69,7 @@ jobs:
             RESULT="false"
           fi
 
-          echo "::set-output name=result::$RESULT"
+          echo "result=$RESULT" >> $GITHUB_OUTPUT
 
   check:
     name: ${{ matrix.configuration.name }}
