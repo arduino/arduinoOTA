@@ -74,7 +74,8 @@ tasks:
     cmds:
       - |
         if ! which ec &>/dev/null; then
-          echo "ec not found or not in PATH. Please install: https://github.com/editorconfig-checker/editorconfig-checker#installation"
+          echo "ec not found or not in PATH."
+          echo "Please install: https://github.com/editorconfig-checker/editorconfig-checker#installation"
           exit 1
         fi
       - ec
@@ -85,7 +86,11 @@ tasks:
     deps:
       - task: npm:install-deps
     cmds:
-      - npx prettier --write .
+      - |
+        npx \
+          prettier \
+            --write \
+            .
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-dependencies-task/Taskfile.yml
   general:cache-dep-licenses:
@@ -97,7 +102,8 @@ tasks:
             echo "Licensed does not have Windows support."
             echo "Please use Linux/macOS or download the dependencies cache from the GitHub Actions workflow artifact."
           else
-            echo "licensed not found or not in PATH. Please install: https://github.com/github/licensed#as-an-executable"
+            echo "licensed not found or not in PATH."
+            echo "Please install: https://github.com/github/licensed#as-an-executable"
           fi
           exit 1
         fi
@@ -117,7 +123,9 @@ tasks:
     deps:
       - task: poetry:install-deps
     cmds:
-      - poetry run codespell
+      - |
+        poetry run \
+          codespell
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/spell-check-task/Taskfile.yml
   general:correct-spelling:
@@ -125,7 +133,10 @@ tasks:
     deps:
       - task: poetry:install-deps
     cmds:
-      - poetry run codespell --write-changes
+      - |
+        poetry run \
+          codespell \
+            --write-changes
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-go-task/Taskfile.yml
   go:fix:
@@ -227,7 +238,11 @@ tasks:
     deps:
       - task: npm:install-deps
     cmds:
-      - npx markdownlint-cli --fix "**/*.md"
+      - |
+        npx \
+          markdownlint-cli \
+            --fix \
+            "**/*.md"
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-markdown-task/Taskfile.yml
   markdown:lint:
@@ -235,7 +250,10 @@ tasks:
     deps:
       - task: npm:install-deps
     cmds:
-      - npx markdownlint-cli "**/*.md"
+      - |
+        npx \
+          markdownlint-cli \
+          "**/*.md"
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/npm-task/Taskfile.yml
   npm:install-deps:
@@ -376,4 +394,9 @@ tasks:
     deps:
       - task: poetry:install-deps
     cmds:
-      - poetry run yamllint --format {{default "colored" .YAMLLINT_FORMAT}} .
+      - |
+        poetry run \
+          yamllint \
+            --format \
+            {{default "colored" .YAMLLINT_FORMAT}} \
+            .
