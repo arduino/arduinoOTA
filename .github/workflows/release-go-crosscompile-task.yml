@@ -11,6 +11,7 @@ env:
   ARTIFACT_PREFIX: dist-
   # See: https://github.com/actions/setup-go/tree/main#supported-version-syntax
   GO_VERSION: "1.17"
+  AWS_REGION: "us-east-1"
 
 on:
   push:
@@ -84,9 +85,8 @@ jobs:
     name: Notarize ${{ matrix.build.artifact-suffix }}
     runs-on: macos-latest
     needs: create-release-artifacts
-    outputs:
-      checksum-darwin_amd64: ${{ steps.re-package.outputs.checksum-darwin_amd64 }}
-      checksum-darwin_arm64: ${{ steps.re-package.outputs.checksum-darwin_arm64 }}
+    permissions:
+      contents: read
 
     env:
       GON_CONFIG_PATH: gon.config.hcl
@@ -118,16 +118,12 @@ jobs:
           name: ${{ env.ARTIFACT_PREFIX }}${{ matrix.build.artifact-suffix }}
           path: ${{ env.DIST_DIR }}
 
-      - name: Remove non-notarized artifact
-        uses: geekyeggo/delete-artifact@v5
-        with:
-          name: ${{ env.ARTIFACT_PREFIX }}${{ matrix.build.artifact-suffix }}
-
       - name: Import Code-Signing Certificates
         env:
           KEYCHAIN: "sign.keychain"
           INSTALLER_CERT_MAC_PATH: "/tmp/ArduinoCerts2020.p12"
-          KEYCHAIN_PASSWORD: keychainpassword # Arbitrary password for a keychain that exists only for the duration of the job, so not secret
+          # Arbitrary password for a keychain that exists only for the duration of the job, so not secret
+          KEYCHAIN_PASSWORD: keychainpassword
         run: |
           echo "${{ secrets.INSTALLER_CERT_MAC_P12 }}" | base64 --decode > "${{ env.INSTALLER_CERT_MAC_PATH }}"
           security create-keychain -p "${{ env.KEYCHAIN_PASSWORD }}" "${{ env.KEYCHAIN }}"
@@ -179,25 +175,31 @@ jobs:
           gon "${{ env.GON_CONFIG_PATH }}"
 
       - name: Re-package binary
-        id: re-package
         working-directory: ${{ env.DIST_DIR }}
         # Repackage the signed binary replaced in place by Gon (ignoring the output zip file)
         run: |
           # GitHub's upload/download-artifact actions don't preserve file permissions,
           # so we need to add execution permission back until the action is made to do this.
           chmod +x "${{ env.BUILD_FOLDER }}/${{ env.PROJECT_NAME }}"
-          tar -czvf "${{ env.PACKAGE_FILENAME }}" "${{ env.BUILD_FOLDER }}/"
+          tar -czvf "${{ env.PACKAGE_FILENAME }}" \
+          -C "${{ env.BUILD_FOLDER }}/" "${{ env.PROJECT_NAME }}" \
+          -C ../../ LICENSE.txt
 
-      - name: Upload notarized artifact
+      - name: Replace artifact with notarized build
         uses: actions/upload-artifact@v4
         with:
           if-no-files-found: error
           name: ${{ env.ARTIFACT_PREFIX }}${{ matrix.build.artifact-suffix }}
+          overwrite: true
           path: ${{ env.DIST_DIR }}/${{ env.PACKAGE_FILENAME }}
 
   create-release:
     runs-on: ubuntu-latest
+    environment: production
     needs: notarize-macos
+    permissions:
+      contents: write
+      id-token: write # This is required for requesting the JWT
 
     steps:
       - name: Download artifact
@@ -208,7 +210,7 @@ jobs:
           pattern: ${{ env.ARTIFACT_PREFIX }}*
 
       - name: Create checksum file
-        working-directory: ${{ env.DIST_DIR}}
+        working-directory: ${{ env.DIST_DIR }}
         run: |
           TAG="${GITHUB_REF/refs\/tags\//}"
           sha256sum ${{ env.PROJECT_NAME }}_${TAG}* > ${TAG}-checksums.txt
@@ -233,12 +235,12 @@ jobs:
           # (all the files we need are in the DIST_DIR root)
           artifacts: ${{ env.DIST_DIR }}/*
 
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-session-name: "github_${{ env.PROJECT_NAME }}"
+          aws-region: ${{ env.AWS_REGION }}
+
       - name: Upload release files on Arduino downloads servers
-        uses: docker://plugins/s3
-        env:
-          PLUGIN_SOURCE: "${{ env.DIST_DIR }}/*"
-          PLUGIN_TARGET: ${{ env.AWS_PLUGIN_TARGET }}
-          PLUGIN_STRIP_PREFIX: "${{ env.DIST_DIR }}/"
-          PLUGIN_BUCKET: ${{ secrets.DOWNLOADS_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: aws s3 sync ${{ env.DIST_DIR }} s3://${{ secrets.DOWNLOADS_BUCKET }}${{ env.AWS_PLUGIN_TARGET }}
