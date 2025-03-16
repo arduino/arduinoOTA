@@ -64,7 +64,6 @@ jobs:
 
       matrix:
         file:
-          # TODO: add paths to any additional Taskfiles here
           - ./**/Taskfile.yml
           - ./**/DistTasks.yml
 
