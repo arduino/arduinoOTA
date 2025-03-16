@@ -11,6 +11,8 @@ on:
       - "**/.npmrc"
       - "**/.prettierignore"
       - "**/.prettierrc*"
+      # Prettier-covered file patterns are defined by:
+      # https://github.com/github-linguist/linguist/blob/main/lib/linguist/languages.yml
       # CSS
       - "**.css"
       - "**.wxss"
