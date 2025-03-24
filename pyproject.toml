@@ -8,7 +8,7 @@ authors = []
 python = "~3.9"
 
 [tool.poetry.dev-dependencies]
-yamllint = "^1.36.2"
+yamllint = "^1.37.0"
 codespell = "^2.4.1"
 
 # The dependencies in this group are installed using pipx; NOT Poetry. The use of a `poetry` section is a hack required
