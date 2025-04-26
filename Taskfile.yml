@@ -393,7 +393,6 @@ tasks:
     cmds:
       - |
         poetry install \
-           --no-root \
           {{if .POETRY_GROUPS}} --only {{.POETRY_GROUPS}} {{end}}
 
   # Make a temporary file named according to the passed TEMPLATE variable and print the path passed to stdout
