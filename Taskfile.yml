@@ -122,6 +122,8 @@ tasks:
     desc: Check for commonly misspelled words
     deps:
       - task: poetry:install-deps
+        vars:
+          POETRY_GROUPS: dev
     cmds:
       - |
         poetry run \
@@ -132,6 +134,8 @@ tasks:
     desc: Correct commonly misspelled words where possible
     deps:
       - task: poetry:install-deps
+        vars:
+          POETRY_GROUPS: dev
     cmds:
       - |
         poetry run \
@@ -380,11 +384,17 @@ tasks:
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/poetry-task/Taskfile.yml
   poetry:install-deps:
-    desc: Install dependencies managed by Poetry
+    desc: |
+      Install dependencies managed by Poetry.
+      Environment variable parameters:
+      POETRY_GROUPS: Poetry dependency groups to install (default: install all dependencies).
     deps:
       - task: poetry:install
     cmds:
-      - poetry install --no-root
+      - |
+        poetry install \
+           --no-root \
+          {{if .POETRY_GROUPS}} --only {{.POETRY_GROUPS}} {{end}}
 
   # Make a temporary file named according to the passed TEMPLATE variable and print the path passed to stdout
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/windows-task/Taskfile.yml
@@ -426,6 +436,8 @@ tasks:
     desc: Check for problems with YAML files
     deps:
       - task: poetry:install-deps
+        vars:
+          POETRY_GROUPS: dev
     cmds:
       - |
         poetry run \
