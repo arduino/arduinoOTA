@@ -392,17 +392,6 @@ tasks:
         vars:
           RAW_PATH: "{{.RAW_PATH}}"
 
-  # Make a temporary folder named according to the passed TEMPLATE variable and print the path passed to stdout
-  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/windows-task/Taskfile.yml
-  utility:mktemp-folder:
-    vars:
-      RAW_PATH:
-        sh: mktemp --directory --tmpdir "{{.TEMPLATE}}"
-    cmds:
-      - task: utility:normalize-path
-        vars:
-          RAW_PATH: "{{.RAW_PATH}}"
-
   # Print a normalized version of the path passed via the RAW_PATH variable to stdout
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/windows-task/Taskfile.yml
   utility:normalize-path:
