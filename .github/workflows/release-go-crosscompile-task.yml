@@ -84,9 +84,6 @@ jobs:
     name: Notarize ${{ matrix.build.artifact-suffix }}
     runs-on: macos-latest
     needs: create-release-artifacts
-    outputs:
-      checksum-darwin_amd64: ${{ steps.re-package.outputs.checksum-darwin_amd64 }}
-      checksum-darwin_arm64: ${{ steps.re-package.outputs.checksum-darwin_arm64 }}
     permissions:
       contents: read
 
