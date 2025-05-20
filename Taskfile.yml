@@ -95,6 +95,7 @@ tasks:
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-dependencies-task/Taskfile.yml
   general:cache-dep-licenses:
     desc: Cache dependency license metadata
+    run: when_changed
     deps:
       - task: general:prepare-deps
     cmds:
@@ -147,6 +148,7 @@ tasks:
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-go-dependencies-task/Taskfile.yml
   general:prepare-deps:
     desc: Prepare project dependencies for license check
+    run: when_changed
     # No preparation is needed for Go module-based projects.
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-go-task/Taskfile.yml
@@ -253,6 +255,7 @@ tasks:
       PROJECT_PATH: Path of the npm-managed project (default: {{.DEFAULT_NPM_PROJECT_PATH}}).
     dir: |
       "{{default .DEFAULT_NPM_PROJECT_PATH .PROJECT_PATH}}"
+    run: when_changed
     cmds:
       - npm install
 
@@ -374,6 +377,7 @@ tasks:
       Install dependencies managed by Poetry.
       Environment variable parameters:
       POETRY_GROUPS: Poetry dependency groups to install (default: install all dependencies).
+    run: when_changed
     deps:
       - task: poetry:install
     cmds:
