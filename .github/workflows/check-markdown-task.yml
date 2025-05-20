@@ -8,6 +8,7 @@ on:
     paths:
       - ".github/workflows/check-markdown-task.ya?ml"
       - ".markdown-link-check.json"
+      - ".npmrc"
       - "package.json"
       - "package-lock.json"
       - "Taskfile.ya?ml"
@@ -16,11 +17,11 @@ on:
       - "**.mkdn"
       - "**.mdown"
       - "**.markdown"
-      - "**/.npmrc"
   pull_request:
     paths:
       - ".github/workflows/check-markdown-task.ya?ml"
       - ".markdown-link-check.json"
+      - ".npmrc"
       - "package.json"
       - "package-lock.json"
       - "Taskfile.ya?ml"
@@ -29,7 +30,6 @@ on:
       - "**.mkdn"
       - "**.mdown"
       - "**.markdown"
-      - "**/.npmrc"
   schedule:
     # Run every Tuesday at 8 AM UTC to catch breakage caused by external changes.
     - cron: "0 8 * * TUE"
