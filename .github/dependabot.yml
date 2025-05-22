@@ -9,6 +9,7 @@ updates:
     directory: / # Check the repository's workflows under /.github/workflows/
     assignees:
       - per1234
+    open-pull-requests-limit: 100
     schedule:
       interval: daily
     labels:
@@ -16,6 +17,7 @@ updates:
 
   - package-ecosystem: npm
     directory: /
+    open-pull-requests-limit: 100
     schedule:
       interval: daily
     labels:
@@ -25,6 +27,7 @@ updates:
 
   - package-ecosystem: pip
     directory: /
+    open-pull-requests-limit: 100
     schedule:
       interval: daily
     labels:
