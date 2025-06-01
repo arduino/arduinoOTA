@@ -385,6 +385,24 @@ tasks:
         poetry install \
           {{if .POETRY_GROUPS}} --only {{.POETRY_GROUPS}} {{end}}
 
+  poetry:sync:
+    desc: Sync poetry.lock
+    deps:
+      - task: poetry:install
+    cmds:
+      - |
+        poetry lock \
+          --no-cache
+
+  poetry:validate:
+    desc: Validate pyproject.toml
+    deps:
+      - task: poetry:install
+    cmds:
+      - |
+        poetry check \
+          --lock
+
   # Make a temporary file named according to the passed TEMPLATE variable and print the path passed to stdout
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/windows-task/Taskfile.yml
   utility:mktemp-file:
