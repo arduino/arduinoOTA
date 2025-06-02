@@ -1,11 +1,6 @@
 # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/release-go-crosscompile-task.md
 name: Release
 
-on:
-  push:
-    tags:
-      - "[0-9]+.[0-9]+.[0-9]+*"
-
 env:
   # As defined by the Taskfile's PROJECT_NAME variable
   PROJECT_NAME: arduinoOTA
@@ -14,6 +9,11 @@ env:
   # The project's folder on Arduino's download server for uploading builds
   AWS_PLUGIN_TARGET: /arduinoOTA/
   ARTIFACT_PREFIX: dist-
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+*"
 
 jobs:
   create-release-artifacts:
