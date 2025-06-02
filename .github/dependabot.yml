@@ -11,7 +11,8 @@ updates:
       - per1234
     open-pull-requests-limit: 100
     schedule:
-      interval: daily
+      cronjob: 0 12 * * *
+      interval: cron
     labels:
       - "topic: infrastructure"
 
@@ -19,7 +20,8 @@ updates:
     directory: /
     open-pull-requests-limit: 100
     schedule:
-      interval: daily
+      cronjob: 0 14 * * *
+      interval: cron
     labels:
       - "topic: infrastructure"
     assignees:
@@ -29,7 +31,8 @@ updates:
     directory: /
     open-pull-requests-limit: 100
     schedule:
-      interval: daily
+      cronjob: 0 15 * * *
+      interval: cron
     labels:
       - "topic: infrastructure"
     assignees:
