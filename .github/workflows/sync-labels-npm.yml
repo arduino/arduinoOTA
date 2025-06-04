@@ -1,10 +1,6 @@
 # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/sync-labels-npm.md
 name: Sync Labels
 
-env:
-  CONFIGURATIONS_FOLDER: .github/label-configuration-files
-  CONFIGURATIONS_ARTIFACT_PREFIX: label-configuration-file-
-
 # See: https://docs.github.com/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows
 on:
   push:
@@ -26,6 +22,10 @@ on:
     - cron: "0 8 * * *"
   workflow_dispatch:
   repository_dispatch:
+
+env:
+  CONFIGURATIONS_FOLDER: .github/label-configuration-files
+  CONFIGURATIONS_ARTIFACT_PREFIX: label-configuration-file-
 
 jobs:
   check:
