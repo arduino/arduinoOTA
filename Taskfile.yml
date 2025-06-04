@@ -256,7 +256,7 @@ tasks:
     desc: |
       Install dependencies managed by npm.
       Environment variable parameters:
-      PROJECT_PATH: Path of the npm-managed project (default: {{.DEFAULT_NPM_PROJECT_PATH}}).
+      - PROJECT_PATH: Path of the npm-managed project (default: {{.DEFAULT_NPM_PROJECT_PATH}}).
     dir: |
       "{{default .DEFAULT_NPM_PROJECT_PATH .PROJECT_PATH}}"
     run: when_changed
@@ -268,7 +268,7 @@ tasks:
     desc: |
       Validate npm configuration files against their JSON schema.
       Environment variable parameters:
-      PROJECT_PATH: Path of the npm-managed project (default: {{.DEFAULT_NPM_PROJECT_PATH}}).
+      - PROJECT_PATH: Path of the npm-managed project (default: {{.DEFAULT_NPM_PROJECT_PATH}}).
     deps:
       - task: npm:install-deps
     vars:
@@ -380,7 +380,7 @@ tasks:
     desc: |
       Install dependencies managed by Poetry.
       Environment variable parameters:
-      POETRY_GROUPS: Poetry dependency groups to install (default: install all dependencies).
+      - POETRY_GROUPS: Poetry dependency groups to install (default: install all dependencies).
     run: when_changed
     deps:
       - task: poetry:install
@@ -407,7 +407,9 @@ tasks:
         poetry check \
           --lock
 
-  # Make a temporary file named according to the passed TEMPLATE variable and print the path passed to stdout
+  # Make a temporary file and print the path passed to stdout.
+  # Environment variable parameters:
+  # - TEMPLATE: template for the format of the filename.
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/windows-task/Taskfile.yml
   utility:mktemp-file:
     vars:
@@ -418,7 +420,9 @@ tasks:
         vars:
           RAW_PATH: "{{.RAW_PATH}}"
 
-  # Print a normalized version of the path passed via the RAW_PATH variable to stdout
+  # Print a normalized version of the path to stdout.
+  # Environment variable parameters:
+  # - RAW_PATH: the path to be normalized.
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/windows-task/Taskfile.yml
   utility:normalize-path:
     cmds:
