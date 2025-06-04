@@ -157,21 +157,33 @@ tasks:
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-go-task/Taskfile.yml
   go:fix:
-    desc: Modernize usages of outdated APIs
+    desc: |
+      Modernize usages of outdated APIs.
+      Environment variable parameters:
+      - GO_MODULE_PATH: Path of the Go module root (default: {{.DEFAULT_GO_MODULE_PATH}}).
+      - GO_PACKAGES: List of Go packages to modernize (default: all packages of the module).
     dir: "{{default .DEFAULT_GO_MODULE_PATH .GO_MODULE_PATH}}"
     cmds:
       - go fix {{default .DEFAULT_GO_PACKAGES .GO_PACKAGES}}
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-go-task/Taskfile.yml
   go:format:
-    desc: Format Go code
+    desc: |
+      Format Go code.
+      Environment variable parameters:
+      - GO_MODULE_PATH: Path of the Go module root (default: {{.DEFAULT_GO_MODULE_PATH}}).
+      - GO_PACKAGES: List of Go packages to modernize (default: all packages of the module).
     dir: "{{default .DEFAULT_GO_MODULE_PATH .GO_MODULE_PATH}}"
     cmds:
       - go fmt {{default .DEFAULT_GO_PACKAGES .GO_PACKAGES}}
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-go-task/Taskfile.yml
   go:lint:
-    desc: Lint Go code
+    desc: |
+      Lint Go code.
+      Environment variable parameters:
+      - GO_MODULE_PATH: Path of the Go module root (default: {{.DEFAULT_GO_MODULE_PATH}}).
+      - GO_PACKAGES: List of Go packages to modernize (default: all packages of the module).
     dir: "{{default .DEFAULT_GO_MODULE_PATH .GO_MODULE_PATH}}"
     cmds:
       - |
@@ -186,7 +198,11 @@ tasks:
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-go-task/Taskfile.yml
   go:vet:
-    desc: Check for errors in Go code
+    desc: |
+      Check for errors in Go code.
+      Environment variable parameters:
+      - GO_MODULE_PATH: Path of the Go module root (default: {{.DEFAULT_GO_MODULE_PATH}}).
+      - GO_PACKAGES: List of Go packages to modernize (default: all packages of the module).
     dir: "{{default .DEFAULT_GO_MODULE_PATH .GO_MODULE_PATH}}"
     cmds:
       - go vet {{default .DEFAULT_GO_PACKAGES .GO_PACKAGES}}
@@ -256,7 +272,7 @@ tasks:
     desc: |
       Install dependencies managed by npm.
       Environment variable parameters:
-      PROJECT_PATH: Path of the npm-managed project (default: {{.DEFAULT_NPM_PROJECT_PATH}}).
+      - PROJECT_PATH: Path of the npm-managed project (default: {{.DEFAULT_NPM_PROJECT_PATH}}).
     dir: |
       "{{default .DEFAULT_NPM_PROJECT_PATH .PROJECT_PATH}}"
     run: when_changed
@@ -268,7 +284,7 @@ tasks:
     desc: |
       Validate npm configuration files against their JSON schema.
       Environment variable parameters:
-      PROJECT_PATH: Path of the npm-managed project (default: {{.DEFAULT_NPM_PROJECT_PATH}}).
+      - PROJECT_PATH: Path of the npm-managed project (default: {{.DEFAULT_NPM_PROJECT_PATH}}).
     deps:
       - task: npm:install-deps
     vars:
@@ -380,7 +396,7 @@ tasks:
     desc: |
       Install dependencies managed by Poetry.
       Environment variable parameters:
-      POETRY_GROUPS: Poetry dependency groups to install (default: install all dependencies).
+      - POETRY_GROUPS: Poetry dependency groups to install (default: install all dependencies).
     run: when_changed
     deps:
       - task: poetry:install
@@ -407,7 +423,9 @@ tasks:
         poetry check \
           --lock
 
-  # Make a temporary file named according to the passed TEMPLATE variable and print the path passed to stdout
+  # Make a temporary file and print the path passed to stdout.
+  # Environment variable parameters:
+  # - TEMPLATE: template for the format of the filename.
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/windows-task/Taskfile.yml
   utility:mktemp-file:
     vars:
@@ -418,7 +436,9 @@ tasks:
         vars:
           RAW_PATH: "{{.RAW_PATH}}"
 
-  # Print a normalized version of the path passed via the RAW_PATH variable to stdout
+  # Print a normalized version of the path to stdout.
+  # Environment variable parameters:
+  # - RAW_PATH: the path to be normalized.
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/windows-task/Taskfile.yml
   utility:normalize-path:
     cmds:
@@ -431,6 +451,8 @@ tasks:
           echo "{{.RAW_PATH}}"
         fi
 
+  # Environment variable parameters:
+  # - YAMLLINT_FORMAT: yamllint output format (default: colored).
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-yaml-task/Taskfile.yml
   yaml:lint:
     desc: Check for problems with YAML files
