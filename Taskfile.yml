@@ -39,6 +39,11 @@ vars:
       )
 
 tasks:
+  build:
+    desc: Build the project
+    deps:
+      - task: go:build
+
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-workflows-task/Taskfile.yml
   ci:validate:
     desc: Validate GitHub Actions workflows against their JSON schema
@@ -154,6 +159,16 @@ tasks:
     desc: Prepare project dependencies for license check
     run: when_changed
     # No preparation is needed for Go module-based projects.
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/go-task/Taskfile.yml
+  go:build:
+    desc: Build the Go code
+    dir: "{{.DEFAULT_GO_MODULE_PATH}}"
+    cmds:
+      - |
+        go build \
+          -v \
+          {{.LDFLAGS}}
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-go-task/Taskfile.yml
   go:fix:
