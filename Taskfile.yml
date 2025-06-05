@@ -5,6 +5,15 @@ includes:
   dist: ./DistTasks.yml
 
 vars:
+  # Path of the project's primary Go module:
+  DEFAULT_GO_MODULE_PATH: ./
+  DEFAULT_GO_PACKAGES:
+    sh: |
+      echo $(
+        cd {{default .DEFAULT_GO_MODULE_PATH .GO_MODULE_PATH}} &&
+        go list ./... | tr '\n' ' ' ||
+        echo '"ERROR: Unable to discover Go packages"'
+      )
   # Path of the primary npm-managed project:
   DEFAULT_NPM_PROJECT_PATH: ./
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/release-go-task/Taskfile.yml
@@ -28,15 +37,6 @@ vars:
     -X {{.CONFIGURATION_PACKAGE}}.commit={{.COMMIT}}
     -X {{.CONFIGURATION_PACKAGE}}.date={{.TIMESTAMP}}
     '
-  # Path of the project's primary Go module:
-  DEFAULT_GO_MODULE_PATH: ./
-  DEFAULT_GO_PACKAGES:
-    sh: |
-      echo $(
-        cd {{default .DEFAULT_GO_MODULE_PATH .GO_MODULE_PATH}} &&
-        go list ./... | tr '\n' ' ' ||
-        echo '"ERROR: Unable to discover Go packages"'
-      )
 
 tasks:
   build:
@@ -77,30 +77,6 @@ tasks:
     # This is an "umbrella" task used to call any documentation generation processes the project has.
     # It can be left empty if there are none.
 
-  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-general-formatting-task/Taskfile.yml
-  general:check-formatting:
-    desc: Check basic formatting style of all files
-    cmds:
-      - |
-        if ! which ec &>/dev/null; then
-          echo "ec not found or not in PATH."
-          echo "Please install: https://github.com/editorconfig-checker/editorconfig-checker#installation"
-          exit 1
-        fi
-      - ec
-
-  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-prettier-formatting-task/Taskfile.yml
-  general:format-prettier:
-    desc: Format all supported files with Prettier
-    deps:
-      - task: npm:install-deps
-    cmds:
-      - |
-        npx \
-          prettier \
-            --write \
-            .
-
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-dependencies-task/Taskfile.yml
   general:cache-dep-licenses:
     desc: Cache dependency license metadata
@@ -128,6 +104,30 @@ tasks:
       - task: general:cache-dep-licenses
     cmds:
       - licensed status
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-general-formatting-task/Taskfile.yml
+  general:check-formatting:
+    desc: Check basic formatting style of all files
+    cmds:
+      - |
+        if ! which ec &>/dev/null; then
+          echo "ec not found or not in PATH."
+          echo "Please install: https://github.com/editorconfig-checker/editorconfig-checker#installation"
+          exit 1
+        fi
+      - ec
+
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-prettier-formatting-task/Taskfile.yml
+  general:format-prettier:
+    desc: Format all supported files with Prettier
+    deps:
+      - task: npm:install-deps
+    cmds:
+      - |
+        npx \
+          prettier \
+            --write \
+            .
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/spell-check-task/Taskfile.yml
   general:check-spelling:
