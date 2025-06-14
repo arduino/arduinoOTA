@@ -9,6 +9,6 @@
     "prettier-plugin-toml": "2.0.5"
   },
   "engines": {
-    "node": "20.x"
+    "node": "22.x"
   }
 }
