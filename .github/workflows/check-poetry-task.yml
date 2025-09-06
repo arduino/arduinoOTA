@@ -67,7 +67,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           version: 3.x
 
-      - name: Validate pyproject.toml
+      - name: Validate configuration
         run: |
           task \
             --silent \
