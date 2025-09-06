@@ -22,13 +22,34 @@ vars:
   DIST_DIR: "dist"
   # build vars
   COMMIT:
-    sh: echo "$(git log --no-show-signature -n 1 --format=%h)"
+    sh: |
+      echo \
+        "$(
+          git log \
+            --no-show-signature \
+            -n 1 \
+            --format=%h
+        )"
   TIMESTAMP:
-    sh: echo "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+    sh: |
+      echo \
+        "$(
+          date \
+            -u \
+            +"%Y-%m-%dT%H:%M:%SZ"
+        )"
   TIMESTAMP_SHORT:
     sh: echo "{{now | date "20060102"}}"
   TAG:
-    sh: echo "$(git tag --points-at=HEAD 2> /dev/null | head -n1)"
+    sh: |
+      echo \
+        "$(
+          git tag \
+            --points-at=HEAD \
+          2>/dev/null \
+          | \
+          head -n1
+        )"
   VERSION: "{{if .NIGHTLY}}nightly-{{.TIMESTAMP_SHORT}}{{else if .TAG}}{{.TAG}}{{else}}{{.PACKAGE_NAME_PREFIX}}git-snapshot{{end}}"
   CONFIGURATION_PACKAGE: "github.com/arduino/arduinoOTA/version"
   LDFLAGS: >-
@@ -111,7 +132,10 @@ tasks:
     desc: Check basic formatting style of all files
     cmds:
       - |
-        if ! which ec &>/dev/null; then
+        if
+          ! which ec \
+          &>/dev/null
+        then
           echo "ec not found or not in PATH."
           echo "Please install: https://github.com/editorconfig-checker/editorconfig-checker#installation"
           exit 1
@@ -281,7 +305,7 @@ tasks:
       - |
         npx \
           markdownlint-cli \
-          "**/*.md"
+            "**/*.md"
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/npm-task/Taskfile.yml
   npm:install-deps:
@@ -459,10 +483,17 @@ tasks:
   utility:normalize-path:
     cmds:
       - |
-        if [[ "{{.OS}}" == "Windows_NT" ]] && which cygpath &>/dev/null; then
-            # Even though the shell handles POSIX format absolute paths as expected, external applications do not.
-            # So paths passed to such applications must first be converted to Windows format.
-            cygpath -w "{{.RAW_PATH}}"
+        if
+          [[ "{{.OS}}" == "Windows_NT" ]] \
+          && \
+          which cygpath \
+          &>/dev/null
+        then
+          # Even though the shell handles POSIX format absolute paths as expected, external applications do not.
+          # So paths passed to such applications must first be converted to Windows format.
+          cygpath \
+            -w \
+            "{{.RAW_PATH}}"
         else
           echo "{{.RAW_PATH}}"
         fi
