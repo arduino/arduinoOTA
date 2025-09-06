@@ -105,6 +105,7 @@ jobs:
         run: |
           # See: https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#setting-an-environment-variable
           echo "BUILD_FOLDER=${{ env.PROJECT_NAME }}_osx_${{ matrix.build.folder-suffix }}" >>"$GITHUB_ENV"
+
           TAG="${GITHUB_REF/refs\/tags\//}"
           echo "PACKAGE_FILENAME=${{ env.PROJECT_NAME }}_${TAG}_${{ matrix.build.package-suffix }}" >>$GITHUB_ENV
 
@@ -125,14 +126,18 @@ jobs:
           KEYCHAIN_PASSWORD: keychainpassword
         run: |
           echo "${{ secrets.INSTALLER_CERT_MAC_P12 }}" | base64 --decode >"${{ env.INSTALLER_CERT_MAC_PATH }}"
+
           security create-keychain \
             -p "${{ env.KEYCHAIN_PASSWORD }}" \
             "${{ env.KEYCHAIN }}"
+
           security default-keychain \
             -s "${{ env.KEYCHAIN }}"
+
           security unlock-keychain \
             -p "${{ env.KEYCHAIN_PASSWORD }}" \
             "${{ env.KEYCHAIN }}"
+
           security import \
             "${{ env.INSTALLER_CERT_MAC_PATH }}" \
             -k "${{ env.KEYCHAIN }}" \
@@ -140,6 +145,7 @@ jobs:
             -A \
             -T "/usr/bin/codesign" \
             -P "${{ secrets.INSTALLER_CERT_MAC_PASSWORD }}"
+
           security set-key-partition-list \
             -S apple-tool:,apple: \
             -s \
@@ -155,6 +161,7 @@ jobs:
           unzip \
             gon_macos.zip \
             -d /usr/local/bin
+
       - name: Write gon config to file
         # gon does not allow env variables in config file (https://github.com/mitchellh/gon/issues/20)
         run: |
@@ -197,6 +204,7 @@ jobs:
             -czv \
             -f "${{ env.PACKAGE_FILENAME }}" \
             "${{ env.BUILD_FOLDER }}/"
+
       - name: Replace artifact with notarized build
         uses: actions/upload-artifact@v4
         with:
@@ -237,12 +245,15 @@ jobs:
           unzip \
             -p /tmp/3.2.0.zip semver-tool-3.2.0/src/semver \
           >/tmp/semver
+
           chmod \
             +x \
             /tmp/semver
+
           if [[ "$(/tmp/semver get prerel "${GITHUB_REF/refs\/tags\//}")" ]]; then
             echo "IS_PRE=true" >>$GITHUB_OUTPUT
           fi
+
       - name: Create Github Release and upload artifacts
         uses: ncipollo/release-action@v1
         with:
