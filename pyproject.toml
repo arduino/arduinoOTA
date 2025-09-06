@@ -10,8 +10,8 @@ python = "~3.9"
 yamllint = "^1.37.1"
 codespell = "^2.4.1"
 
-# The dependencies in this group are installed using pipx; NOT Poetry. The use of a `poetry` section is a hack required
-# in order to be able to manage updates of these dependencies via Dependabot, as used for all other dependencies.
+# The dependencies in this group are installed using pipx; NOT Poetry. The use of the `tool.poetry.group` super-table
+# is a hack required in order to be able to manage updates of these dependencies via Dependabot.
 [tool.poetry.group.pipx]
 optional = true
 
