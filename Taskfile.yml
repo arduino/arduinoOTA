@@ -496,7 +496,8 @@ tasks:
     cmds:
       - |
         poetry check \
-          --lock
+          --lock \
+          --strict
 
   # Make a temporary file and print the path passed to stdout.
   # Environment variable parameters:
