@@ -7,7 +7,7 @@ includes:
 vars:
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/go-task/Taskfile.yml
   # Path of the project's primary Go module:
-  DEFAULT_GO_MODULE_PATH: ./
+  DEFAULT_GO_MODULE_PATH: .
   DEFAULT_GO_PACKAGES:
     sh: |
       echo $(
@@ -16,7 +16,7 @@ vars:
         echo '"ERROR: Unable to discover Go packages"'
       )
   # Path of the primary npm-managed project:
-  DEFAULT_NPM_PROJECT_PATH: ./
+  DEFAULT_NPM_PROJECT_PATH: .
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/release-go-task/Taskfile.yml
   PROJECT_NAME: "arduinoOTA"
   DIST_DIR: "dist"
