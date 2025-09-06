@@ -105,7 +105,6 @@ tasks:
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-dependencies-task/Taskfile.yml
   general:cache-dep-licenses:
     desc: Cache dependency license metadata
-    run: when_changed
     deps:
       - task: general:prepare-deps
     cmds:
@@ -187,7 +186,6 @@ tasks:
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-go-dependencies-task/Taskfile.yml
   general:prepare-deps:
     desc: Prepare project dependencies for license check
-    run: when_changed
     # No preparation is needed for Go module-based projects.
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/go-task/Taskfile.yml
