@@ -15,6 +15,7 @@ vars:
         go list ./... | tr '\n' ' ' ||
         echo '"ERROR: Unable to discover Go packages"'
       )
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/npm-task/Taskfile.yml
   # Path of the primary npm-managed project:
   DEFAULT_NPM_PROJECT_PATH: .
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/release-go-task/Taskfile.yml
@@ -413,6 +414,7 @@ tasks:
             -r "{{.STYLELINTRC_SCHEMA_PATH}}" \
             -d "{{.INSTANCE_PATH}}"
 
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/poetry-task/Taskfile.yml
   poetry:install:
     desc: Install Poetry
     run: once
@@ -458,6 +460,7 @@ tasks:
         poetry install \
           {{if .POETRY_GROUPS}} --only {{.POETRY_GROUPS}} {{end}}
 
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-poetry-task/Taskfile.yml
   poetry:sync:
     desc: Sync poetry.lock
     deps:
@@ -467,6 +470,7 @@ tasks:
         poetry lock \
           --no-cache
 
+  # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-poetry-task/Taskfile.yml
   poetry:validate:
     desc: Validate pyproject.toml
     deps:

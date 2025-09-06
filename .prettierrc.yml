@@ -1,2 +1,3 @@
+# Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-prettier-formatting/toml/.prettierrc.yml
 plugins:
   - prettier-plugin-toml
