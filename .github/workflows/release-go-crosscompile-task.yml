@@ -125,9 +125,14 @@ jobs:
           KEYCHAIN_PASSWORD: keychainpassword
         run: |
           echo "${{ secrets.INSTALLER_CERT_MAC_P12 }}" | base64 --decode >"${{ env.INSTALLER_CERT_MAC_PATH }}"
-          security create-keychain -p "${{ env.KEYCHAIN_PASSWORD }}" "${{ env.KEYCHAIN }}"
-          security default-keychain -s "${{ env.KEYCHAIN }}"
-          security unlock-keychain -p "${{ env.KEYCHAIN_PASSWORD }}" "${{ env.KEYCHAIN }}"
+          security create-keychain \
+            -p "${{ env.KEYCHAIN_PASSWORD }}" \
+            "${{ env.KEYCHAIN }}"
+          security default-keychain \
+            -s "${{ env.KEYCHAIN }}"
+          security unlock-keychain \
+            -p "${{ env.KEYCHAIN_PASSWORD }}" \
+            "${{ env.KEYCHAIN }}"
           security import \
             "${{ env.INSTALLER_CERT_MAC_PATH }}" \
             -k "${{ env.KEYCHAIN }}" \
@@ -143,13 +148,18 @@ jobs:
 
       - name: Install gon for code signing and app notarization
         run: |
-          wget -q https://github.com/Bearer/gon/releases/download/v0.0.27/gon_macos.zip
-          unzip gon_macos.zip -d /usr/local/bin
+          wget \
+            -q \
+            https://github.com/Bearer/gon/releases/download/v0.0.27/gon_macos.zip
 
+          unzip \
+            gon_macos.zip \
+            -d /usr/local/bin
       - name: Write gon config to file
         # gon does not allow env variables in config file (https://github.com/mitchellh/gon/issues/20)
         run: |
-          cat >"${{ env.GON_CONFIG_PATH }}" <<EOF
+          cat >"${{ env.GON_CONFIG_PATH }}" \
+          <<EOF
           # See: https://github.com/Bearer/gon#configuration-file
           source = ["${{ env.DIST_DIR }}/${{ env.BUILD_FOLDER }}/${{ env.PROJECT_NAME }}"]
           bundle_id = "cc.arduino.${{ env.PROJECT_NAME }}"
@@ -179,9 +189,14 @@ jobs:
         run: |
           # GitHub's upload/download-artifact actions don't preserve file permissions,
           # so we need to add execution permission back until the action is made to do this.
-          chmod +x "${{ env.BUILD_FOLDER }}/${{ env.PROJECT_NAME }}"
-          tar -czvf "${{ env.PACKAGE_FILENAME }}" "${{ env.BUILD_FOLDER }}/"
+          chmod \
+            +x \
+            "${{ env.BUILD_FOLDER }}/${{ env.PROJECT_NAME }}"
 
+          tar \
+            -czv \
+            -f "${{ env.PACKAGE_FILENAME }}" \
+            "${{ env.BUILD_FOLDER }}/"
       - name: Replace artifact with notarized build
         uses: actions/upload-artifact@v4
         with:
@@ -215,10 +230,19 @@ jobs:
         # to implement auto pre-release based on tag
         id: prerelease
         run: |
-          wget -q -P /tmp https://github.com/fsaintjacques/semver-tool/archive/3.2.0.zip
-          unzip -p /tmp/3.2.0.zip semver-tool-3.2.0/src/semver >/tmp/semver && chmod +x /tmp/semver
-          if [[ "$(/tmp/semver get prerel "${GITHUB_REF/refs\/tags\//}")" ]]; then echo "IS_PRE=true" >> $GITHUB_OUTPUT; fi
+          wget \
+            -q \
+            -P /tmp https://github.com/fsaintjacques/semver-tool/archive/3.2.0.zip
 
+          unzip \
+            -p /tmp/3.2.0.zip semver-tool-3.2.0/src/semver \
+          >/tmp/semver
+          chmod \
+            +x \
+            /tmp/semver
+          if [[ "$(/tmp/semver get prerel "${GITHUB_REF/refs\/tags\//}")" ]]; then
+            echo "IS_PRE=true" >>$GITHUB_OUTPUT
+          fi
       - name: Create Github Release and upload artifacts
         uses: ncipollo/release-action@v1
         with:
