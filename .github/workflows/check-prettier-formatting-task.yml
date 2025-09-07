@@ -268,13 +268,10 @@ jobs:
           version: 3.x
 
       - name: Format with Prettier
-        run: |
-          task \
-            general:format-prettier
+        run: task general:format-prettier
 
       - name: Check formatting
         run: |
-          git \
-            diff \
-              --color \
-              --exit-code
+          git diff \
+            --color \
+            --exit-code

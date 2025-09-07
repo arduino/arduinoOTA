@@ -121,10 +121,9 @@ jobs:
 
       - name: Check if any fixes were needed
         run: |
-          git \
-            diff \
-              --color \
-              --exit-code
+          git diff \
+            --color \
+            --exit-code
 
   check-style:
     name: check-style (${{ matrix.module.path }})
@@ -201,10 +200,9 @@ jobs:
 
       - name: Check formatting
         run: |
-          git \
-            diff \
-              --color \
-              --exit-code
+          git diff \
+            --color \
+            --exit-code
 
   check-config:
     name: check-config (${{ matrix.module.path }})
@@ -236,7 +234,6 @@ jobs:
 
       - name: Check whether any tidying was needed
         run: |
-          git \
-            diff \
-              --color \
-              --exit-code
+          git diff \
+            --color \
+            --exit-code
