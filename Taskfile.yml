@@ -425,7 +425,7 @@ tasks:
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/poetry-task/Taskfile.yml
   poetry:install:
     desc: Install Poetry
-    run: once
+    run: when_changed
     cmds:
       - |
         if ! which pipx &>/dev/null; then
