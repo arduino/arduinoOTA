@@ -1,3 +1,4 @@
+# Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/check-poetry-task.md
 name: Check Poetry
 
 on:
@@ -67,7 +68,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           version: 3.x
 
-      - name: Validate pyproject.toml
+      - name: Validate configuration
         run: |
           task \
             --silent \

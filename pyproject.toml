@@ -1,3 +1,5 @@
+# Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/poetry/pyproject.toml
+
 [tool.poetry]
 package-mode = false
 
