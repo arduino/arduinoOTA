@@ -78,6 +78,8 @@ tasks:
       WORKFLOWS_DATA_PATH: "./.github/workflows/*.{yml,yaml}"
     deps:
       - task: npm:install-deps
+        vars:
+          PROJECT_PATH: .
     cmds:
       - |
         wget \
@@ -148,6 +150,8 @@ tasks:
     desc: Format all supported files with Prettier
     deps:
       - task: npm:install-deps
+        vars:
+          PROJECT_PATH: .
     cmds:
       - |
         npx \
@@ -279,6 +283,8 @@ tasks:
     deps:
       - task: docs:generate
       - task: npm:install-deps
+        vars:
+          PROJECT_PATH: .
     cmds:
       - |
         npx \
@@ -290,6 +296,8 @@ tasks:
     desc: Automatically correct linting violations in Markdown files where possible
     deps:
       - task: npm:install-deps
+        vars:
+          PROJECT_PATH: .
     cmds:
       - |
         npx \
@@ -302,6 +310,8 @@ tasks:
     desc: Check for problems in Markdown files
     deps:
       - task: npm:install-deps
+        vars:
+          PROJECT_PATH: .
     cmds:
       - |
         npx \
