@@ -221,7 +221,7 @@ tasks:
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-go-task/Taskfile.yml
   go:lint:
     desc: |
-      Lint Go code.
+      Lint Go code
       Environment variable parameters:
       - GO_MODULE_PATH: Path of the Go module root (default: {{.DEFAULT_GO_MODULE_PATH}}).
       - GO_PACKAGES: List of Go packages to modernize (default: all packages of the module).
@@ -462,7 +462,7 @@ tasks:
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-poetry-task/Taskfile.yml
   poetry:sync:
-    desc: Sync poetry.lock
+    desc: Sync Poetry lockfile
     deps:
       - task: poetry:install
     cmds:
@@ -472,7 +472,7 @@ tasks:
 
   # Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-poetry-task/Taskfile.yml
   poetry:validate:
-    desc: Validate pyproject.toml
+    desc: Validate Poetry configuration
     deps:
       - task: poetry:install
     cmds:
