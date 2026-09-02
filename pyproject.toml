@@ -7,7 +7,7 @@ package-mode = false
 python = "~3.14"
 
 [tool.poetry.group.dev.dependencies]
-yamllint = "^1.37.1"
+yamllint = "^1.38.0"
 codespell = "^2.4.2"
 
 # The dependencies in this group are installed using pipx; NOT Poetry. The use of the `tool.poetry.group` super-table
