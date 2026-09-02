@@ -8,7 +8,7 @@ python = "~3.14"
 
 [tool.poetry.group.dev.dependencies]
 yamllint = "^1.38.0"
-codespell = "^2.4.2"
+codespell = "^2.4.3"
 
 # The dependencies in this group are installed using pipx; NOT Poetry. The use of the `tool.poetry.group` super-table
 # is a hack required in order to be able to manage updates of these dependencies via Dependabot.
