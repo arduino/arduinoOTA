@@ -1,3 +1,3 @@
 module github.com/arduino/arduinoOTA
 
-go 1.17
+go 1.27.1
