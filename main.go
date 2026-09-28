@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net"
 	"net/http"
 	"net/http/httptrace"
@@ -101,7 +100,7 @@ func main() {
 			}
 			defer resp.Body.Close()
 
-			statusString, err := ioutil.ReadAll(resp.Body)
+			statusString, err := io.ReadAll(resp.Body)
 
 			if strings.Contains(string(statusString), syncString) {
 				fmt.Println(string(statusString))
@@ -196,7 +195,7 @@ func main() {
 		}
 		defer resp.Body.Close()
 
-		respStr, _ := ioutil.ReadAll(resp.Body)
+		respStr, _ := io.ReadAll(resp.Body)
 
 		if resp.StatusCode != 200 {
 			if *verbose {
